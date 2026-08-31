@@ -65,8 +65,14 @@ class Mul extends Binop {
 public class SimpleAexpr {
   public static void main(String[] args) {
     
-    Aexpr e = new Add(new CstI(17), new Var("z"));
-    System.out.println(e);
+    Aexpr e1 = new Add(new CstI(17), new Var("z"));
+    Aexpr e2 = new Sub(new Var("v"), new Add(new Var("w"), new Var("z")));
+    Aexpr e3 = new Mul(new CstI(2), new Sub(new Var("v"), new Add(new Var("w"), new Var("z"))));
+    Aexpr e4 = new Add(new Var("x"), new Add(new Var("y"), new Add(new Var("z"), new Var("v"))));
     
+    System.out.println(e1);
+    System.out.println(e2);
+    System.out.println(e3);
+    System.out.println(e4);
   }
 }

@@ -15,3 +15,6 @@ then we the helper on the rest of the bindings. Then we remove x, because x is b
 not free anymore. 
 Finally we combine the two lists with union so we dont get dupliactes, which gives us all the free variables of the 
 let-expression. 
+
+## 2.3
+For 2.3, we have changed the 'tcomp' function on lines 259-269, to work with the new version of 'let'. 

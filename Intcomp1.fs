@@ -71,7 +71,7 @@ let rec eval e (env : (string * int) list) : int =
 let run e = eval e [];;
 let res = List.map run [e1;e2;e3;e4;e5;e7;e11]  (* e6 has free variables *)
 
-(*
+
 (* ---------------------------------------------------------------------- *)
 
 (* Closedness *)
@@ -85,7 +85,7 @@ let rec mem x vs =
 
 (* Checking whether an expression is closed.  The vs is 
    a list of the bound variables.  *)
-
+(*
 let rec closedin (e : expr) (vs : string list) : bool =
     match e with
     | CstI i -> true
@@ -191,7 +191,7 @@ let e8s1a = subst e8s0 [("z", CstI 100)];;
 
 // Shows renaming of bound variable z (to z3), avoiding capture of free z
 let e9s1a = subst e9s0 [("y", Var "z")];;
-
+*)
 (* ---------------------------------------------------------------------- *)
 
 (* Free variables *)
@@ -222,15 +222,19 @@ let rec freevars e : string list =
     match e with
     | CstI i -> []
     | Var x  -> [x]
-    | Let(x, erhs, ebody) ->
-          union (freevars erhs, minus (freevars ebody, [x]))
+    | Let(bindings, ebody) ->
+        let rec helper lst = 
+            match lst with
+            | [] -> freevars ebody
+            | (x, erhs) :: xs -> union (freevars erhs, minus (helper xs, [x]))
+        helper bindings
     | Prim(ope, e1, e2) -> union (freevars e1, freevars e2);;
 
 (* Alternative definition of closed *)
 
 let closed2 e = (freevars e = []);;
-let _ = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10]
-
+let wallah = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10;e11]
+(*
 (* ---------------------------------------------------------------------- *)
 
 (* Compilation to target expressions with numerical indexes instead of

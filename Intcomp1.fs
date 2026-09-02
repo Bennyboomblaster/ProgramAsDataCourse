@@ -16,26 +16,30 @@ type expr =
 (* Some closed expressions: *)
 
 let e0 = Prim("+", CstI 17, Prim("+", CstI 5, CstI 7));;
-let e1 = Let("z", CstI 17, Prim("+", Var "z", Var "z"));;
+let e1 = Let([("z", CstI 17)], Prim("+", Var "z", Var "z"));;
 
-let e2 = Let("z", CstI 17, 
-             Prim("+", Let("z", CstI 22, Prim("*", CstI 100, Var "z")),
+let e2 = Let([("z", CstI 17)],
+             Prim("+", Let([("z", CstI 22)], Prim("*", CstI 100, Var "z")),
                        Var "z"));;
 
-let e3 = Let("z", Prim("-", CstI 5, CstI 4), 
+
+let e3 = Let([("z", Prim("-", CstI 5, CstI 4))],
              Prim("*", CstI 100, Var "z"));;
 
-let e4 = Prim("+", Prim("+", CstI 20, Let("z", CstI 17, 
-                                          Prim("+", Var "z", CstI 2))),
-                   CstI 30);;
+let e4 = Prim("+", Prim("+", CstI 20, Let([("z", CstI 17)], Prim("+", Var "z", CstI 2))), CstI 30);;
 
-let e5 = Prim("*", CstI 2, Let("x", CstI 3, Prim("+", Var "x", CstI 4)));;
+let e5 = Prim("*", CstI 2, Let([("x", CstI 3)], Prim("+", Var "x", CstI 4)));;
 
-let e6 = Let("z", Var "x", Prim("+", Var "z", Var "x"))
-let e7 = Let("z", CstI 3, Let("y", Prim("+", Var "z", CstI 1), Prim("+", Var "z", Var "y")))
-let e8 = Let("z", Let("x", CstI 4, Prim("+", Var "x", CstI 5)), Prim("*", Var "z", CstI 2))
-let e9 = Let("z", CstI 3, Let("y", Prim("+", Var "z", CstI 1), Prim("+", Var "x", Var "y")))
-let e10 = Let("z", Prim("+", Let("x", CstI 4, Prim("+", Var "x", CstI 5)), Var "x"), Prim("*", Var "z", CstI 2))
+let e6 = Let([("z", Var "x")], Prim("+", Var "z", Var "x"))
+let e7 = Let([("z", CstI 3)], Let([("y", Prim("+", Var "z", CstI 1))], Prim("+", Var "z", Var "y")))
+let e8 = Let([("z", Let([("x", CstI 4)], Prim("+", Var "x", CstI 5)))], Prim("*", Var "z", CstI 2))
+let e9 = Let([("z", CstI 3)], Let([("y", Prim("+", Var "z", CstI 1))], Prim("+", Var "x", Var "y")))
+let e10 = Let([("z", Prim("+", Let([("x", CstI 4)], Prim("+", Var "x", CstI 5)), Var "x"))], Prim("*", Var "z", CstI 2))
+
+(* Exercise 2.1: multiple sequential let-bindings *)
+let e11 = Let([("x1", Prim("+", CstI 5, CstI 7));
+               ("x2", Prim("*", Var "x1", CstI 2))],
+              Prim("+", Var "x1", Var "x2"));;
 
 (* ---------------------------------------------------------------------- *)
 
@@ -50,11 +54,11 @@ let rec eval e (env : (string * int) list) : int =
     match e with
     | CstI i            -> i
     | Var x             -> lookup env x 
-    | Let(lst, xp) -> 
-        let envMaker lst envA = 
+    | Let(lst, xp) ->
+        let rec envMaker lst envA =
             match lst with
             |[] -> eval xp envA
-            |(x,y) :: xs -> 
+            |(x,y) :: xs ->
                 let yval = eval y envA
                 let env1 = (x,yval) :: envA
                 envMaker xs env1
@@ -65,9 +69,9 @@ let rec eval e (env : (string * int) list) : int =
     | Prim _            -> failwith "unknown primitive";;
 
 let run e = eval e [];;
-let res = List.map run [e1;e2;e3;e4;e5;e7]  (* e6 has free variables *)
+let res = List.map run [e1;e2;e3;e4;e5;e7;e11]  (* e6 has free variables *)
 
-
+(*
 (* ---------------------------------------------------------------------- *)
 
 (* Closedness *)
@@ -86,8 +90,8 @@ let rec closedin (e : expr) (vs : string list) : bool =
     match e with
     | CstI i -> true
     | Var x  -> List.exists (fun y -> x=y) vs
-    | Let(x, erhs, ebody) -> 
-      let vs1 = x :: vs 
+    | Let(x, erhs, ebody) ->
+      let vs1 = x :: vs
       closedin erhs vs && closedin ebody vs1
     | Prim(ope, e1, e2) -> closedin e1 vs && closedin e2 vs;;
 
@@ -218,7 +222,7 @@ let rec freevars e : string list =
     match e with
     | CstI i -> []
     | Var x  -> [x]
-    | Let(x, erhs, ebody) -> 
+    | Let(x, erhs, ebody) ->
           union (freevars erhs, minus (freevars ebody, [x]))
     | Prim(ope, e1, e2) -> union (freevars e1, freevars e2);;
 
@@ -252,8 +256,8 @@ let rec tcomp (e : expr) (cenv : string list) : texpr =
     match e with
     | CstI i -> TCstI i
     | Var x  -> TVar (getindex cenv x)
-    | Let(x, erhs, ebody) -> 
-      let cenv1 = x :: cenv 
+    | Let(x, erhs, ebody) ->
+      let cenv1 = x :: cenv
       TLet(tcomp erhs cenv, tcomp ebody cenv1)
     | Prim(ope, e1, e2) -> TPrim(ope, tcomp e1 cenv, tcomp e2 cenv);;
 
@@ -365,7 +369,7 @@ let rec scomp (e : expr) (cenv : stackvalue list) : sinstr list =
     match e with
     | CstI i -> [SCstI i]
     | Var x  -> [SVar (getindex cenv (Bound x))]
-    | Let(x, erhs, ebody) -> 
+    | Let(x, erhs, ebody) ->
           scomp erhs cenv @ scomp ebody (Bound x :: cenv) @ [SSwap; SPop]
     | Prim("+", e1, e2) -> 
           scomp e1 cenv @ scomp e2 (Value :: cenv) @ [SAdd] 
@@ -389,3 +393,4 @@ let intsToFile (inss : int list) (fname : string) =
 
 
 (* -----------------------------------------------------------------  *)
+*)

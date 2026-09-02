@@ -236,7 +236,7 @@ let closed2 e = (freevars e = []);;
 let wallah = List.map closed2 [e1;e2;e3;e4;e5;e6;e7;e8;e9;e10;e11]
 (*
 (* ---------------------------------------------------------------------- *)
-
+*)
 (* Compilation to target expressions with numerical indexes instead of
    symbolic variable names.  *)
 
@@ -282,7 +282,7 @@ let rec teval (e : texpr) (renv : int list) : int =
     | TPrim _            -> failwith "unknown primitive";;
 
 (* Correctness: eval e []  equals  teval (tcomp e []) [] *)
-
+(*
 
 (* ---------------------------------------------------------------------- *)
 

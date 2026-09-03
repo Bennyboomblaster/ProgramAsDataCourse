@@ -1,3 +1,23 @@
+## 1.1.1
+On lines 71-73 in the Intro2.fs file we added the "min", "max", and "==" operators.
+<break>
+For "max" we compare the two evaluated values i1 and i2. If i1 is greater than i2, then we keep i1 as output, otherwise we keep i2.
+We follow the same structure for "min", however we compare with less than, and keep the smaller value.
+For "==", we check whether i1 and i2 are equal. If they are we return a 1, and if not, we return a 0
+
+## 1.1.2
+On lines 40-46 in the Intro2.fs file, we have added four expressions to test that our solution works. They include the "max", "min" operators, and return the expected output.
+For the "==" operation, we've added two expressions - one where i1 and i2 evaluate to the same value, and one where they don't. They both return the expected output.
+
+## 1.1.3
+On lines 64-73 in the Intro2.fs file we changed the Prim function to include an "ope" argument and introduced a pattern match on the operator. Within the Prim function we now evaluate i1 and i2, and then we match on the operator to figure out what we need to do with the two values based on which operator the "ope" matches.
+
+## 1.1.4
+On line 28 in the Intro2.fs file we introduced the conditional expression If with three "expr"-arguments to the expr datatype.
+
+## 1.1.5
+On lines 61-63 in the Intro2.fs file we introduced the conditional expression in the eval function.
+Within the "If"-expression, we evaluate the first expression e1 and check whether it is non-zero. If it is not, we evaluate the e2 expression, and otherwise we evaluate e3.
 
 ## 1.2
 (i)

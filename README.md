@@ -27,7 +27,7 @@ the list of bindings, adds them to the environment and finally evaluates the res
 <br> 
 The expressions e1-e11 has been changed to follow the new version of binding variables with let. 
 <br>
-To let the load the file into dotnet fsi interactive environment, we have commented out all of the functions that still 
+In order to correctly load the file into dotnet fsi interactive environment, we have commented out all of the functions that still 
 follows the old definition of Let, since we have not been asked to change these in the exercise descriptions. 
 
 

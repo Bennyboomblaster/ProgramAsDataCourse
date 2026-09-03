@@ -1,114 +1,24 @@
-## 1.1.1
-On lines 71-73 in the Intro2.fs file we added the "min", "max", and "==" operators.
-<break>
-For "max" we compare the two evaluated values i1 and i2. If i1 is greater than i2, then we keep i1 as output, otherwise we keep i2.
-We follow the same structure for "min", however we compare with less than, and keep the smaller value.
-For "==", we check whether i1 and i2 are equal. If they are we return a 1, and if not, we return a 0
-
-## 1.1.2
-On lines 40-46 in the Intro2.fs file, we have added four expressions to test that our solution works. They include the "max", "min" operators, and return the expected output.
-For the "==" operation, we've added two expressions - one where i1 and i2 evaluate to the same value, and one where they don't. They both return the expected output.
-
-## 1.1.3
-On lines 64-73 in the Intro2.fs file we changed the Prim function to include an "ope" argument and introduced a pattern match on the operator. Within the Prim function we now evaluate i1 and i2, and then we match on the operator to figure out what we need to do with the two values based on which operator the "ope" matches.
-
-## 1.1.4
-On line 28 in the Intro2.fs file we introduced the conditional expression If with three "expr"-arguments to the expr datatype.
-
-## 1.1.5
-On lines 61-63 in the Intro2.fs file we introduced the conditional expression in the eval function.
-Within the "If"-expression, we evaluate the first expression e1 and check whether it is non-zero. If it is not, we evaluate the e2 expression, and otherwise we evaluate e3.
-
-## 1.2
-(i)
-We made the aexpr by having all the arithmetic actions being aexpr * aexpr
-
-(ii)
-
-v − (w + z)  = Sub(Var "v", Add(Var "w", Var "z"))
-
-2 ∗ (v − (w + z)) =  Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
-
-x + y + z + v.Add(Var "x", Add(Var "y", Add(Var "z", Var "v")))
-
-(iii)
-We just followed the structure of eval and made  a recursive function for printing
-
-(iv)
-We just used pattern-matching to follow the table of simplifications.
-
-(v)
-We just made sure to cover the different differentational rules, so they are all covered through recursion on all the different aexpr's. E.g. ```add```We use differentation on both sides of the aexpr and then evalute by adding the two values we got from doing differential on the aepxr's
-
-## 1.2
-(i)
-We made the aexpr by having all the arithmetic actions being aexpr * aexpr 
-
-(ii)
-
-v − (w + z)  = Sub(Var "v", Add(Var "w", Var "z"))
-
-2 ∗ (v − (w + z)) =  Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
-
-x + y + z + v.Add(Var "x", Add(Var "y", Add(Var "z", Var "v")))
-
-(iii)
-We just followed the structure of eval and made  a recursive function for printing
-
-(iv)
-We just used pattern-matching to follow the table of simplifications.
-
-(v)
-We just made sure to cover the different differentational rules, so they are all covered through recursion on all the different aexpr's. E.g. ```add```We use differentation on both sides of the aexpr and then evalute by adding the two values we got from doing differential on the aepxr's 
-
-## 1.4 
-Solution is in SimpleAexpr.java.
-
-We use a abstract base class ``Aexpr`` which defines different functions that all expressions need to implement. ``CstI`` and ``Var`` are classes that inherit from Aexpr and ``Binop`` is also a Abstract class which add, sub and mul all inherit from .
-
-(ii)
-
-Aexpr e2 = new Sub(new Var("v"), new Add(new Var("w"), new Var("z")));
-
-Aexpr e3 = new Mul(new CstI(2), new Sub(new Var("v"), new Add(new Var("w"), new Var("z"))));
-
-Aexpr e4 = new Add(new Var("x"), new Add(new Var("y"), new Add(new Var("z"), new Var("v"))));
-
-(iii)
-We made it so that Binop.eval performs the arithmetic by recursively evaluating e1 and e2
-
-(iv) 
-For simplify we used instanceof to do field casting to inspect the sub-expressions.
-
-
-## 2.1
-For 2.1 we have changed the 'Let' in the type 'expr' to take '(string * expr) list * expr, so a single let can carry
-several bindings. In the function 'eval' we have made an inner helper function 'envMaker' which recursively goes through
-the list of bindings, adds them to the environment and finally evaluates the resulting environment.
+## 2.4
+For 2.4 we have modified 'scomp' to match the new definition of Let with the help of an inner helper function. 
 <br>
-The expressions e1-e11 has been changed to follow the new version of binding variables with let.
-<br>
-In order to correctly load the file into dotnet fsi interactive environment, we have commented out all of the functions that still
-follows the old definition of Let, since we have not been asked to change these in the exercise descriptions.
+Then we created 'sinstrToInt' that converts a 'sinstr' to the corresponding int list using the convertion table from the 
+exercise pdf. 
+<br> 
+at last we made the 'assemble' function which folds over a list of sinstr expressions and converting them using the 
+'sinstrToInt' function, so that it can be used in the Machine.java file.
 
-
-## 2.2
-For 2.2, we have changed the 'freevars' functoin to work with the new version of 'let'.
-Here, we have made an inner helper function, which walks through the let bindings.
-If the list of the bindings is empty, we just return the free variables in the body.
-Otherwise, we take the first binding (x, erhs), where we first find the free variables in 'erhs' and
-then we the helper on the rest of the bindings. Then we remove x, because x is bound i.e. any x that shows up later is
-not free anymore.
-Finally we combine the two lists with union so we don't get dupliactes, which gives us all the free variables of the
-let-expression.
-
-## 2.3
-For 2.3, we have changed the 'tcomp' function on lines 259-269, to work with the new version of 'let'. Since 'texpr'
-and 'teval' still only supports single-binding Tlet, we decompose a multi-binding Let into a chain of nested Tlets.
+## 2.5
+To create the file 'is1.txt' we used the function intsToFile with the following command: 
+intsToFile (assemble (scomp e1 [])) "is1.txt";;
 <br>
-we made an inner helper function that goes through the bindings one by one. If there are no more bindings left, the
-body is compiled. Otherwise, we take the first binding (x, erhs), compile 'erhs' and wrap it in a 'TLet'.
-Then we recursively call the helper again on the rest of the bindings, but this time add x to the environment so the
-next bindigns know that x exists.
+Then we compiled and ran the java program 'Machine.java' with following commands:
 <br>
-The result is a bunch of TLets, where the first binding sits on the outside and the body ends up on the inside. 
+% javac Machine.java
+<br>
+% java Machine is1.txt
+<br>
+and got the result: 
+<br>
+Result: 34
+<br>
+which means our program works as intended

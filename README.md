@@ -20,6 +20,26 @@ We just used pattern-matching to follow the table of simplifications.
 (v)
 We just made sure to cover the different differentational rules, so they are all covered through recursion on all the different aexpr's. E.g. ```add```We use differentation on both sides of the aexpr and then evalute by adding the two values we got from doing differential on the aepxr's 
 
+## 1.4 
+Solution is in SimpleAexpr.java.
+
+We use a abstract base class ``Aexpr`` which defines different functions that all expressions need to implement. ``CstI`` and ``Var`` are classes that inherit from Aexpr and ``Binop`` is also a Abstract class which add, sub and mul all inherit from .
+
+(ii)
+
+Aexpr e2 = new Sub(new Var("v"), new Add(new Var("w"), new Var("z")));
+
+Aexpr e3 = new Mul(new CstI(2), new Sub(new Var("v"), new Add(new Var("w"), new Var("z"))));
+
+Aexpr e4 = new Add(new Var("x"), new Add(new Var("y"), new Add(new Var("z"), new Var("v"))));
+
+(iii)
+We made it so that Binop.eval performs the arithmetic by recursively evaluating e1 and e2
+
+(iv) 
+For simplify we used instanceof to do field casting to inspect the sub-expressions.
+
+
 ## 2.1
 For 2.1 we have changed the 'Let' in the type 'expr' to take '(string * expr) list * expr, so a single let can carry 
 several bindings. In the function 'eval' we have made an inner helper function 'envMaker' which recursively goes through

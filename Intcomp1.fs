@@ -408,4 +408,17 @@ let intsToFile (inss : int list) (fname : string) =
 
 (* -----------------------------------------------------------------  *)
 
-//let rec assemble (lst: sintre list) : int list =     
+// 2.4 + 2.5
+let sinstrToInt (s : sinstr) : int list = 
+    match s with
+    | SCstI x -> [0; x]
+    | SVar x -> [1; x]
+    | SAdd -> [2]
+    | SSub -> [3]
+    | SMul -> [4]
+    | SPop -> [5]
+    | SSwap -> [6]
+
+
+let assemble (lst : sinstr list) : int list = 
+    List.foldBack (fun x acc -> sinstrToInt x @ acc) lst []

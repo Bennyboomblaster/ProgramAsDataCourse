@@ -284,6 +284,8 @@ let rec teval (e : texpr) (renv : int list) : int =
     | TPrim("-", e1, e2) -> teval e1 renv - teval e2 renv
     | TPrim _            -> failwith "unknown primitive";;
 
+
+
 (* Correctness: eval e []  equals  teval (tcomp e []) [] *)
 (*
 
@@ -401,3 +403,5 @@ let intsToFile (inss : int list) (fname : string) =
 
 (* -----------------------------------------------------------------  *)
 *)
+
+let rec assemble (lst: sintre list) : int list = 

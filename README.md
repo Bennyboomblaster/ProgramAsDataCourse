@@ -1,3 +1,25 @@
+
+## 1.2
+(i)
+We made the aexpr by having all the arithmetic actions being aexpr * aexpr 
+
+(ii)
+
+v − (w + z)  = Sub(Var "v", Add(Var "w", Var "z"))
+
+2 ∗ (v − (w + z)) =  Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
+
+x + y + z + v.Add(Var "x", Add(Var "y", Add(Var "z", Var "v")))
+
+(iii)
+We just followed the structure of eval and made  a recursive function for printing
+
+(iv)
+We just used pattern-matching to follow the table of simplifications.
+
+(v)
+We just made sure to cover the different differentational rules, so they are all covered through recursion on all the different aexpr's. E.g. ```add```We use differentation on both sides of the aexpr and then evalute by adding the two values we got from doing differential on the aepxr's 
+
 ## 2.1
 For 2.1 we have changed the 'Let' in the type 'expr' to take '(string * expr) list * expr, so a single let can carry 
 several bindings. In the function 'eval' we have made an inner helper function 'envMaker' which recursively goes through

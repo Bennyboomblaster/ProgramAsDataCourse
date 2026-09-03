@@ -72,13 +72,20 @@ let rec eval e (env : (string * int) list) : int =
             |"min" -> if i1 < i2 then i1 else i2
             |"==" -> if i1 = i2 then 1 else 0
             |_ -> failwith  "unknown primitive"
-
+(*1.2 ----------  AEXPR*)
 type aexpr = 
     | CstI of int
     | Var of string
     | Add of aexpr * aexpr
     | Mul of aexpr * aexpr
     | Sub of aexpr * aexpr
+
+// exercise 1.2.2
+//  v − (w + z)  = Sub(Var "v", Add(Var "w", Var "z"))
+
+//  2 ∗ (v − (w + z)) =  Mul(CstI 2, Sub(Var "v", Add(Var "w", Var "z")))
+
+// x + y + z + v.Add(Var "x", Add(Var "y", Add(Var "z", Var "v")))
 
 let rec fmt (a : aexpr) : string = 
     match a with
@@ -117,7 +124,7 @@ let rec diff (s : string) (e : aexpr) : aexpr =
         let d1 = diff s e1
         let d2 = diff s e2
         Add(Mul(d1,e2), Mul(e1,d2)) 
-
+(*END OF 1.2 ---------------------*)
 (*
 let e1v  = eval e1 env;;
 let e2v1 = eval e2 env;;

@@ -339,7 +339,7 @@ rcomp e0;;
 reval (rcomp e0) [];;
 
 
-
+*)
 (* Storing intermediate results and variable bindings in the same stack *)
 
 type sinstr =
@@ -378,9 +378,14 @@ let rec scomp (e : expr) (cenv : stackvalue list) : sinstr list =
     match e with
     | CstI i -> [SCstI i]
     | Var x  -> [SVar (getindex cenv (Bound x))]
-    | Let(x, erhs, ebody) ->
-          scomp erhs cenv @ scomp ebody (Bound x :: cenv) @ [SSwap; SPop]
-    | Prim("+", e1, e2) -> 
+    | Let(bindings, ebody) ->
+        let rec helper cenvAcc bs =
+            match bs with
+            | [] -> scomp ebody cenvAcc
+            | (x, erhs) :: xs ->
+                scomp erhs cenvAcc @ helper (Bound x :: cenvAcc) xs @ [SSwap; SPop]
+        helper cenv bindings
+    | Prim("+", e1, e2) ->
           scomp e1 cenv @ scomp e2 (Value :: cenv) @ [SAdd] 
     | Prim("-", e1, e2) -> 
           scomp e1 cenv @ scomp e2 (Value :: cenv) @ [SSub] 
@@ -402,6 +407,5 @@ let intsToFile (inss : int list) (fname : string) =
 
 
 (* -----------------------------------------------------------------  *)
-*)
 
-let rec assemble (lst: sintre list) : int list = 
+//let rec assemble (lst: sintre list) : int list =     

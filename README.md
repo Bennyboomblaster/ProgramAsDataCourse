@@ -1,23 +1,3 @@
-## 1.1.1
-On lines 71-73 in the Intro2.fs file we added the "min", "max", and "==" operators.
-<break>
-For "max" we compare the two evaluated values i1 and i2. If i1 is greater than i2, then we keep i1 as output, otherwise we keep i2.
-We follow the same structure for "min", however we compare with less than, and keep the smaller value.
-For "==", we check whether i1 and i2 are equal. If they are we return a 1, and if not, we return a 0
-
-## 1.1.2
-On lines 40-46 in the Intro2.fs file, we have added four expressions to test that our solution works. They include the "max", "min" operators, and return the expected output.
-For the "==" operation, we've added two expressions - one where i1 and i2 evaluate to the same value, and one where they don't. They both return the expected output.
-
-## 1.1.3
-On lines 64-73 in the Intro2.fs file we changed the Prim function to include an "ope" argument and introduced a pattern match on the operator. Within the Prim function we now evaluate i1 and i2, and then we match on the operator to figure out what we need to do with the two values based on which operator the "ope" matches.
-
-## 1.1.4
-On line 28 in the Intro2.fs file we introduced the conditional expression If with three "expr"-arguments to the expr datatype.
-
-## 1.1.5
-On lines 61-63 in the Intro2.fs file we introduced the conditional expression in the eval function.
-Within the "If"-expression, we evaluate the first expression e1 and check whether it is non-zero. If it is not, we evaluate the e2 expression, and otherwise we evaluate e3.
 
 ## 1.2
 (i)
@@ -65,10 +45,7 @@ For 2.1 we have changed the 'Let' in the type 'expr' to take '(string * expr) li
 several bindings. In the function 'eval' we have made an inner helper function 'envMaker' which recursively goes through
 the list of bindings, adds them to the environment and finally evaluates the resulting environment. 
 <br> 
-The expressions e1-e11 has been changed to follow the new version of binding variables with let. 
-<br>
-In order to correctly load the file into dotnet fsi interactive environment, we have commented out all of the functions that still 
-follows the old definition of Let, since we have not been asked to change these in the exercise descriptions. 
+The expressions e1-e11 has been changed to follow the new version of binding variables with let
 
 
 ## 2.2
@@ -78,16 +55,8 @@ If the list of the bindings is empty, we just return the free variables in the b
 Otherwise, we take the first binding (x, erhs), where we first find the free variables in 'erhs' and
 then we the helper on the rest of the bindings. Then we remove x, because x is bound i.e. any x that shows up later is
 not free anymore. 
-Finally we combine the two lists with union so we don't get dupliactes, which gives us all the free variables of the 
+Finally we combine the two lists with union so we dont get dupliactes, which gives us all the free variables of the 
 let-expression. 
 
 ## 2.3
-For 2.3, we have changed the 'tcomp' function on lines 259-269, to work with the new version of 'let'. Since 'texpr' 
-and 'teval' still only supports single-binding Tlet, we decompose a multi-binding Let into a chain of nested Tlets.
-<br> 
-we made an inner helper function that goes through the bindings one by one. If there are no more bindings left, the 
-body is compiled. Otherwise, we take the first binding (x, erhs), compile 'erhs' and wrap it in a 'TLet'. 
-Then we recursively call the helper again on the rest of the bindings, but this time add x to the environment so the 
-next bindigns know that x exists. 
-<br>
-The result is a bunch of TLets, where the first binding sits on the outside and the body ends up on the inside. 
+For 2.3, we have changed the 'tcomp' function on lines 259-269, to work with the new version of 'let'. 

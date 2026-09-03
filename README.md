@@ -22,3 +22,33 @@ and got the result:
 Result: 34
 <br>
 which means our program works as intended
+
+## 3.2
+
+The regular expression is ``b*(ab+)*a?``
+
+## 3.3 
+
+let z = (17) in z + 2 * 3 end EOF
+
+Main  
+
+=> Expr EOF (A)
+
+=> LET NAME EQ Expr IN Expr END EOF (F)
+
+=> LET NAME EQ Expr IN Expr PLUS Expr END EOF (H)
+
+=> LET NAME EQ Expr IN Expr PLUS Expr TIMES Expr END EOF (G)
+
+=> LET NAME EQ Expr IN Expr PLUS Expr TIMES CSTINT END EOF (C)
+
+=> LET NAME EQ Expr IN Expr PLUS CSTINT TIMES CSTINT END EOF (C)
+
+=> LET NAME EQ Expr IN NAME PLUS CSTINT TIMES CSTINT END EOF (B)
+
+=> LET NAME EQ LPAR Expr RPAR IN NAME PLUS CSTINT TIMES CSTINT END EOF (E)
+
+=> LET NAME EQ LPAR CSTINT RPAR IN NAME PLUS CSTINT TIMES CSTINT END EOF (C)
+
+

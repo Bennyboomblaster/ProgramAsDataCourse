@@ -26,12 +26,12 @@ Main:
 ;
 
 Expr:
-    NAME                                { Var $1            }(B)
-  | CSTINT                              { CstI $1           }(C)
-  | MINUS CSTINT                        { CstI (- $2)       }(D)
-  | LPAR Expr RPAR                      { $2                }(E)
-  | LET NAME EQ Expr IN Expr END        { Let($2, $4, $6)   }(F)
-  | Expr TIMES Expr                     { Prim("*", $1, $3) }(G)
-  | Expr PLUS  Expr                     { Prim("+", $1, $3) }(H)
-  | Expr MINUS Expr                     { Prim("-", $1, $3) }(I)
+    NAME                                { Var $1            }
+  | CSTINT                              { CstI $1           }
+  | MINUS CSTINT                        { CstI (- $2)       }
+  | LPAR Expr RPAR                      { $2                }
+  | LET NAME EQ Expr IN Expr END        { Let($2, $4, $6)   }
+  | Expr TIMES Expr                     { Prim("*", $1, $3) }
+  | Expr PLUS  Expr                     { Prim("+", $1, $3) }
+  | Expr MINUS Expr                     { Prim("-", $1, $3) }
 ;

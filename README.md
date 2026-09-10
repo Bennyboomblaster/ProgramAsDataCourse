@@ -26,7 +26,8 @@ which means our program works as intended
 ## 3.2
 
 The regular expression is ``b*(ab+)*a?``
-
+The NFA:
+![img.png](img.png)
 ## 3.3 
 
 let z = (17) in z + 2 * 3 end EOF

@@ -28,6 +28,9 @@ which means our program works as intended
 The regular expression is ``b*(ab+)*a?``
 The NFA:
 ![img.png](img.png)
+
+The DFA:
+![rn_image_picker_lib_temp_f6e92af2-5942-44ae-99a4-93fe9cfe79de.jpg](rn_image_picker_lib_temp_f6e92af2-5942-44ae-99a4-93fe9cfe79de.jpg)
 ## 3.3 
 
 let z = (17) in z + 2 * 3 end EOF

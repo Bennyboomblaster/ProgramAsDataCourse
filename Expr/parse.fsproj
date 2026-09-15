@@ -16,6 +16,7 @@
     <Compile Include="ExprPar.fs" />
     <Compile Include="ExprLex.fs" />
     <Compile Include="Parse.fs" />
+    <Compile Include="Expr.fs" />
   </ItemGroup>
 
     <ItemGroup>

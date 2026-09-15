@@ -1,70 +1,9 @@
-## 2.4
-For 2.4 we have modified 'scomp' to match the new definition of Let with the help of an inner helper function. 
+## Exercise 3.5
+We generated the lexer and the parser. There after we tried to use ```FromString``` on the different strings, and saw how it created the expressions from strings with the right syntax and failed when the syntax werent true to the parser. Some other expressions we created were:
 <br>
-Then we created 'sinstrToInt' that converts a 'sinstr' to the corresponding int list using the convertion table from the 
-exercise pdf. 
+```fromString "2 * (3 + 4)";;```
+<br>
+```fromString "let x = 1 in let x = 2 in x + x end end";;```
+<br>
+```fromString "let x = 5 in y + x end";;```
 <br> 
-at last we made the 'assemble' function which folds over a list of sinstr expressions and converting them using the 
-'sinstrToInt' function, so that it can be used in the Machine.java file.
-
-## 2.5
-To create the file 'is1.txt' we used the function intsToFile with the following command: 
-intsToFile (assemble (scomp e1 [])) "is1.txt";;
-<br>
-Then we compiled and ran the java program 'Machine.java' with following commands:
-<br>
-% javac Machine.java
-<br>
-% java Machine is1.txt
-<br>
-and got the result: 
-<br>
-Result: 34
-<br>
-which means our program works as intended
-
-## 3.2
-
-The regular expression is ``b*(ab+)*a?``
-The NFA:
-![img.png](img.png)
-
-The DFA:
-![rn_image_picker_lib_temp_f6e92af2-5942-44ae-99a4-93fe9cfe79de.jpg](rn_image_picker_lib_temp_f6e92af2-5942-44ae-99a4-93fe9cfe79de.jpg)
-## 3.3 
-
-let z = (17) in z + 2 * 3 end EOF
-
-Main  
-
-=> Expr EOF (A)
-
-=> LET NAME EQ Expr IN Expr END EOF (F)
-
-=> LET NAME EQ Expr IN Expr PLUS Expr END EOF (H)
-
-=> LET NAME EQ Expr IN Expr PLUS Expr TIMES Expr END EOF (G)
-
-=> LET NAME EQ Expr IN Expr PLUS Expr TIMES CSTINT END EOF (C) 
-
-=> LET NAME EQ Expr IN Expr PLUS CSTINT TIMES CSTINT END EOF (C) 
-
-=> LET NAME EQ Expr IN NAME PLUS CSTINT TIMES CSTINT END EOF (B)
-
-=> LET NAME EQ LPAR Expr RPAR IN NAME PLUS CSTINT TIMES CSTINT END EOF (E) 
-
-=> LET NAME EQ LPAR CSTINT RPAR IN NAME PLUS CSTINT TIMES CSTINT END EOF (C) d
-
-=> LET NAME EQ LPAR CSTINT RPAR IN NAME PLUS CSTINT TIMES 3 END EOF ()
-
-=> LET NAME EQ LPAR CSTINT RPAR IN NAME PLUS 2 TIMES 3 END EOF ()
-
-=> LET NAME EQ LPAR CSTINT RPAR IN "z" PLUS 2 TIMES 3 END EOF ()
-
-=> LET NAME EQ LPAR 17 RPAR IN "z" PLUS 2 TIMES 3 END EOF ()
-
-=> LET "z" EQ LPAR 17 RPAR IN "z" PLUS 2 TIMES 3 END EOF ()
-
-# 3.4
-Look at Svg file: Tree diagram.drawio!
-[Tree diagram.drawio.svg](Tree%20diagram.drawio.svg)

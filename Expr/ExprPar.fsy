@@ -9,11 +9,13 @@
 %token <int> CSTINT
 %token <string> NAME
 %token PLUS MINUS TIMES DIVIDE EQ
-%token END IN LET
+%token END IN LET 
+%token IF THEN ELSE
 %token LPAR RPAR
 %token EOF
 
-%left MINUS PLUS        /* lowest precedence  */
+%nonassoc ELSE          /* lowest precedence  */
+%left MINUS PLUS        
 %left TIMES             /* highest precedence */
 
 %start Main
@@ -34,4 +36,5 @@ Expr:
   | Expr TIMES Expr                     { Prim("*", $1, $3) }
   | Expr PLUS  Expr                     { Prim("+", $1, $3) }
   | Expr MINUS Expr                     { Prim("-", $1, $3) }
+  | IF Expr THEN Expr ELSE Expr         { If($2, $4, $6)    }
 ;

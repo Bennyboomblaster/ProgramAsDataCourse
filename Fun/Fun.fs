@@ -132,38 +132,40 @@ let ex7 =
                                    [Prim("-", Var "n", CstI 1)]))),
                  Call(Var "pow", [CstI 8]));;
 
+(*
 let ex8 =
     Letfun("pow", "n",
                 If(Prim("=", Var "n", CstI 11),
                     CstI 1,
-                    Prim("*", CstI 3, 
-                              Call(Var "pow", 
+                    Prim("*", CstI 3,
+                              Call(Var "pow",
                                    Prim("+", Var "n", CstI 1)))),
                 Call(Var "pow", CstI 11));;
 
-let ex9 = 
+let ex9 =
         Letfun("pow", "n",
              If(Prim("=", Var "n", CstI 0),
                 CstI 1,
-                Prim("*", CstI 3, 
-                          Call(Var "pow", 
+                Prim("*", CstI 3,
+                          Call(Var "pow",
                                Prim("-", Var "n", CstI 1)))),
              Letfun("sum", "n",
                 If(Prim("<", Var "n", CstI 0),
                   CstI 0,
-                  Prim("+", Call(Var "pow", Var "n"), 
+                  Prim("+", Call(Var "pow", Var "n"),
                           Call(Var "sum", Prim("-", Var "n", CstI 1)))),
                 Call(Var "sum", CstI 11)));;
 
 let ex10 =
-      Letfun("sumEights", "n", 
+      Letfun("sumEights", "n",
         If(Prim("=", Var "n", CstI 0),
           CstI 0,
-          Letfun("pow", "i", 
+          Letfun("pow", "i",
             If(Prim("=", Var "i", CstI 0),
               CstI 1,
-              Prim("*", Var "n", 
+              Prim("*", Var "n",
                 Call(Var "pow", Prim("-", Var "i", CstI 1)))),
             Prim("+", Call(Var "pow", CstI 8),
               Call(Var "sumEights", Prim("-", Var "n", CstI 1))))),
         Call(Var "sumEights", CstI 10));;
+*)

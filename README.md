@@ -28,3 +28,9 @@ We tested this with the following function calls:
 ``val it: sinstr list =
   [SCstI 1; SCstI 2; SVar 1; SVar 1; SAdd; SSwap; SPop; SSwap; SPop]
 ``
+4.3
+ We changed it so that Letfun now holds a string list of parameters instead of a single string, and Call now holds an expr list of arguments instead of a single expr. Then we also changed the Closure  
+type to store string list, and in the evaluator Call now evaluates all arguments and uses List.zip to pair each parameter name with its value when building the function body environment
+4.4
+We changed it so that the parser now collects all parameter names into a string list for Letfun instead of only accepting a single name. Then we also changed AppExpr so that f a b c produces Call(f,  
+[a; b; c]) instead of the curried Call(Call(Call(f, a), b), c) which the evaluator couldn't handle

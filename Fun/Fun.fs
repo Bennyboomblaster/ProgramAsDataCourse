@@ -114,3 +114,20 @@ let ex5 =
                           Call(Var "fib", Prim("-", Var "n", CstI 2))),
                      CstI 1), Call(Var "fib", CstI 25)));;
                      
+(*Exercise 4.2*)
+let ex6 = Letfun("sum", "n",
+                 If(Prim("=", Var "n", CstI 1),
+                    CstI 1,
+                    Prim("+", Var "n", 
+                              Call(Var "sum", 
+                                   Prim("-", Var "n", CstI 1)))),
+                 Call(Var "sum", CstI 1000));;
+
+let ex7 = Letfun("powerof8", "n",
+                 If(Prim("=", Var "n", CstI 1),
+                    CstI 1,
+                    Prim("+", Var "n", 
+                              Call(Var "sum", 
+                                   Prim("-", Var "n", CstI 1)))),
+                 Call(Var "sum", CstI 1000));;
+

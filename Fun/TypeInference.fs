@@ -46,6 +46,7 @@ type typ =
      | TypB                                (* booleans                   *)
      | TypF of typ * typ                   (* (argumenttype, resulttype) *)
      | TypV of typevar                     (* type variable              *)
+     | TypL of typ
 
 and tyvarkind =  
      | NoLink of string                    (* uninstantiated type var.   *)
@@ -88,6 +89,7 @@ let rec freeTypeVars t : typevar list =
     | TypB        -> []
     | TypV tv     -> [tv]
     | TypF(t1,t2) -> union(freeTypeVars t1, freeTypeVars t2)
+    | TypL t -> freeTypeVars t
 
 let occurCheck tyvar tyvars =                     
     if mem tyvar tyvars then failwith "type error: circularity" else ()
@@ -116,6 +118,7 @@ let rec typeToString t : string =
     | TypB         -> "bool"
     | TypV _       -> failwith "typeToString impossible"
     | TypF(t1, t2) -> "function"
+    | TypL t -> "list"
 
 (* Pretty-print type, using names 'a, 'b, ... for type variables *)
 
@@ -129,6 +132,7 @@ let rec showType t : string =
           | (NoLink name, _) -> name
           | _                -> failwith "showType impossible"
         | TypF(t1, t2) -> "(" + pr t1 + " -> " + pr t2 + ")"
+        | TypL t -> "(" + pr t + " list)"
     pr t 
 
 let rec showTEnv tenv =
@@ -163,6 +167,8 @@ let rec unify t1 t2 : unit =
     | (TypI,     t) -> failwith ("type error: int and " + typeToString t)
     | (TypB,     t) -> failwith ("type error: bool and " + typeToString t)
     | (TypF _,   t) -> failwith ("type error: function and " + typeToString t)
+    | (TypL t1, TypL t2) -> unify t1 t2
+    | (TypL _, t) -> failwith ("type error: list and " + typeToString t)
 
 (* Generate fresh type variables *)
 
@@ -205,6 +211,7 @@ let rec copyType subst t : typ =
     | TypF(t1,t2) -> TypF(copyType subst t1, copyType subst t2)
     | TypI        -> TypI
     | TypB        -> TypB
+    | TypL t -> TypL(copyType subst t)
 
 (* Create a type from a type scheme (tvs, t) by instantiating all the
    type scheme's parameters tvs with fresh type variables *)
@@ -240,6 +247,11 @@ let rec typ (lvl : int) (env : tenv) (e : expr) : typ =
       | "=" -> (unify t1 t2; TypB)
       | "<" -> (unify TypI t1; unify TypI t2; TypB)
       | "&" -> (unify TypB t1; unify TypB t2; TypB)
+      | "::" ->
+            let tv = TypV(newTypeVar lvl)
+            unify t1 tv
+            unify t2 (TypL tv)
+            TypL tv
       | _   -> failwith ("unknown primitive " + ope) 
     | Let(x, eRhs, letBody) -> 
       let lvl1 = lvl + 1

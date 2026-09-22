@@ -28,6 +28,7 @@ let keyword s =
     | "in"    -> IN
     | "let"   -> LET
     | "not"   -> NOT
+    | "fun"   -> FUN
     | "then"  -> THEN
     | "true"  -> CSTBOOL true
     | _       -> NAME s
@@ -53,6 +54,7 @@ rule Token = parse
   | '*'             { TIMES }                     
   | '/'             { DIV }                     
   | '%'             { MOD }
+  | "->"            { ARROW }
   | '('             { LPAR }
   | ')'             { RPAR }
   | eof             { EOF }

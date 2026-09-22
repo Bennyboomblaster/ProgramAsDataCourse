@@ -11,6 +11,7 @@
 %token <string> NAME
 %token <bool> CSTBOOL
 
+%token FUN ARROW
 %token ELSE END FALSE IF IN LET NOT THEN TRUE
 %token PLUS MINUS TIMES DIV MOD
 %token EQ NE GT LT GE LE
@@ -18,6 +19,7 @@
 %token EOF
 
 %left ELSE              /* lowest precedence  */
+%right ARROW
 %left EQ NE 
 %left GT LT GE LE
 %left PLUS MINUS
@@ -45,6 +47,7 @@ Expr:
   | Expr DIV   Expr                     { Prim("/",  $1, $3)     } 
   | Expr MOD   Expr                     { Prim("%",  $1, $3)     }
   | Expr EQ    Expr                     { Prim("=",  $1, $3)     }
+  | FUN NAME ARROW Expr                 { Fun($2, $4)            }
   | Expr NE    Expr                     { Prim("<>", $1, $3)     }
   | Expr GT    Expr                     { Prim(">",  $1, $3)     }
   | Expr LT    Expr                     { Prim("<",  $1, $3)     }

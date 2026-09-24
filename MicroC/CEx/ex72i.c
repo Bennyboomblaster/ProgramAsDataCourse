@@ -12,7 +12,7 @@ void arrsum(int n, int arr[], int *sump) {
   *sump = s;
 }
 
-void main(int n) {
+void main() {
   int arr[4];
   int sum;
   arr[0] = 7;

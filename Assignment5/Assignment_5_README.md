@@ -54,3 +54,6 @@ int -> int -> int
 'a
 
 ``let f x = f x in f 1 end``
+
+## 7.1
+we followed the readme, with the addition of adding the MicroVM folder + building that, so the Micro-c test suite returned OK for all outputs

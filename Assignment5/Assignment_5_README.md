@@ -56,4 +56,49 @@ int -> int -> int
 ``let f x = f x in f 1 end``
 
 ## 7.1
-we followed the readme, with the addition of adding the MicroVM folder + building that, so the Micro-c test suite returned OK for all outputs
+we followed the readme, with the addition of adding the MicroVM folder + building that, so the 
+Micro-c test suite returned OK for all outputs
+<br> 
+This is the abstract syntax tree when running fromFile on ex01:
+```fsharp
+val it: Absyn.program =
+  Prog
+    [Fundec
+       (None, "main", [(TypI, "n")],
+        Block
+          [Stmt
+             (While
+                (Prim2 (">", Access (AccVar "n"), CstI 0),
+                 Block
+                   [Stmt (Expr (Prim1 ("printi", Access (AccVar "n"))));
+                    Stmt
+                      (Expr
+                         (Assign
+                            (AccVar "n",
+                             Prim2 ("-", Access (AccVar "n"), CstI 1))))]));
+           Stmt (Expr (Prim1 ("println", CstI 10)))])]
+```
+<br>
+The different parts of our tree are:
+<br>
+
+**Declarations**
+- Prog
+- Fundec
+
+**Statements**
+- Block
+- Stmt??????
+- While
+- Expr
+
+**Types**
+- TypI
+
+**Expressions**
+- Prim2
+- Access
+- AccVar
+- CstI
+- Prim1
+- Assign

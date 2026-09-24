@@ -52,4 +52,5 @@ since anonymous functions cannot recurse by name.
 Files:
 Fun2/FunLex.fsl, Fun2/FunPar.fsy
 
-The concrete syntax for anonymous functions added in 6.2 allows the micro-ML examples from 6.1 to be written using ``fun x -> expr`` instead of nested let-bindings. Both ``let add x = fun y -> x+y in add 2 5 end`` and ``let add = fun x -> fun y -> x+y in add 2 5 end`` evaluate to ``Int 7``, confirming that curried anonymous functions work correctly.
+The concrete syntax for anonymous functions added in 6.2 allows the micro-ML examples from 6.1 to be written using ``fun x -> expr`` instead of the nested let-bindings. 
+Both ``let add x = fun y -> x+y in add 2 5 end`` and ``let add = fun x -> fun y -> x+y in add 2 5 end`` evaluate to ``Int 7``, confirming that the curried anonymous functions work correctly.

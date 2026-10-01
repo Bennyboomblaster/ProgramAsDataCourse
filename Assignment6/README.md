@@ -46,7 +46,29 @@ Tested with `CEx/ex74.c`: `++x` on `x = 5` prints `6`.
 
 ## 8.3
 
-<!-- Files: -->
+Files: `MicroC/Comp.fs`, `MicroC/CEx/ex83.c`, `MicroC/CEx/ex83b.c`
+
+Extended the compiler (`cExpr` in `Comp.fs`, lines 172–173) to generate code for `PreInc` and `PreDec`.
+
+The key insight is that the address must only be computed once. For `++i` the instruction sequence is:
+
+```
+cAccess acc, DUP, LDI, CSTI 1, ADD, STI
+```
+
+- `cAccess acc` pushes the address of the lvalue
+- `DUP` duplicates it — needed because `LDI` consumes the address, but `STI` also needs it later
+- `LDI` reads the current value at that address
+- `CSTI 1, ADD` computes the new value
+- `STI` writes the new value back to the (duplicated) address and leaves the result on the stack
+
+`PreDec` is identical but uses `SUB` instead of `ADD`.
+
+The lexer and parser changes from exercise 7.5 (`INC`/`DEC` tokens) are reused here, so no additional parser changes were needed.
+
+**Tests:**
+- `CEx/ex83.c`: `++x` on `x = 5` prints `6`
+- `CEx/ex83b.c`: `++arr[++i]` with `i = 3`, `arr[4] = 5` — prints `i = 4` and `arr[4] = 6`, confirming the address is computed only once and both `i` and the array element are correctly updated.
 
 ## 8.4
 

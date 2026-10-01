@@ -102,3 +102,9 @@ The different parts of our tree are:
 - CstI
 - Prim1
 - Assign
+
+## 7.3
+We added the "for" keyword to the lexer and the "FOR" to the parser tokens.
+Then we added rules for both StmtM and StmtU taking advantage of While in a Block to make sure that if-statements without and else still parse.
+
+Lastly, we created three ex73 where we modify ex72 to use a for-loop instead of a while-loop

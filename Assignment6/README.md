@@ -22,7 +22,23 @@ Tested in fsi: starting from `x = 5`, `PreInc` returns and stores `6`, `PreDec` 
 
 ## 7.5
 
-<!-- Files: -->
+Files: `MicroC/CLex.fsl`, `MicroC/CPar.fsy`, `MicroC/CEx/ex74.c`
+
+Extended the lexer and parser to accept `++e` and `--e` in concrete micro-C syntax.
+
+**CLex.fsl (lines 53–54):** Added two new token rules before `+` and `-` so the lexer greedily matches `++` and `--` as single tokens:
+- `"++"` → `INC`
+- `"--"` → `DEC`
+
+Order matters: `++` must appear before `+` or the lexer would tokenise `++` as two separate `PLUS` tokens.
+
+**CPar.fsy:**
+- Added `INC` and `DEC` to the `%token` declaration (line 20).
+- Added two rules to `ExprNotAccess` (lines 136–137) that build the abstract syntax from 7.4:
+  - `INC Access` → `PreInc $2`
+  - `DEC Access` → `PreDec $2`
+
+Tested with `CEx/ex74.c`: `++x` on `x = 5` prints `6`.
 
 ## 8.1
 

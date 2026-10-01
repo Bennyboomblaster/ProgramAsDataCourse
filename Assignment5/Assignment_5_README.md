@@ -115,3 +115,9 @@ Adds `void squares(int n, int arr[])` which fills `arr[i] = i*i` for `i = 0..n-1
 
 **(iii) `ex72iii.c` — `histogram`**
 Implements `void histogram(int n, int ns[], int max, int freq[])` which initialises `freq[0..max]` to zero, then counts how often each value appears in `ns`. `main` uses the array `{1,2,1,1,1,2,0}`, calls `histogram(7, arr, 3, freq)`, and prints all four frequency values (1, 4, 2, 0).
+
+## 7.3
+We added the "for" keyword to the lexer and the "FOR" to the parser tokens.
+Then we added rules for both StmtM and StmtU taking advantage of While in a Block to make sure that if-statements without and else still parse.
+
+Lastly, we created three ex73 where we modify ex72 to use a for-loop instead of a while-loop

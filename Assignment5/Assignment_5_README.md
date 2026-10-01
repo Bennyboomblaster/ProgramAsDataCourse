@@ -102,3 +102,16 @@ The different parts of our tree are:
 - CstI
 - Prim1
 - Assign
+
+## 7.2
+
+All three programs are in `MicroC/CEx/` and run via the interpreter using `ParseAndRun`.
+
+**(i) `ex72i.c` — `arrsum`**
+Implements `void arrsum(int n, int arr[], int *sump)` which sums the first `n` elements of `arr` using a while-loop and writes the result through the pointer `sump`. `main` creates `{7, 13, 9, 8}`, calls `arrsum`, and prints the result (37).
+
+**(ii) `ex72ii.c` — `squares`**
+Adds `void squares(int n, int arr[])` which fills `arr[i] = i*i` for `i = 0..n-1`. `main` takes `n` as a parameter, allocates a 20-element array, calls `squares` to fill it, then calls `arrsum` to sum the squares and prints the result.
+
+**(iii) `ex72iii.c` — `histogram`**
+Implements `void histogram(int n, int ns[], int max, int freq[])` which initialises `freq[0..max]` to zero, then counts how often each value appears in `ns`. `main` uses the array `{1,2,1,1,1,2,0}`, calls `histogram(7, arr, 3, freq)`, and prints all four frequency values (1, 4, 2, 0).

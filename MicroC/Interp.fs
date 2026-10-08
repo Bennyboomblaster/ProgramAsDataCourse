@@ -248,13 +248,3 @@ let run (Prog topdecs) vs =
 
 (* Example programs are found in the files ex1.c, ex2.c, etc *)
 
-
- let prog1 = Prog [Fundec(None, "main", [], Block [Dec(TypI, "x"); 
-                Stmt(Expr(Assign(AccVar "x", CstI 5)));
-                    Stmt(Expr(PreInc(AccVar"x")));
-                        Stmt(Expr(Prim1("printi", Access(AccVar "x"))))])];;
-
- let prog2 = Prog [Fundec(None, "main", [], Block [Dec(TypI, "x"); 
-                Stmt(Expr(Assign(AccVar "x", CstI 5)));
-                    Stmt(Expr(PreDec(AccVar"x")));
-                        Stmt(Expr(Prim1("printi", Access(AccVar "x"))))])];;

@@ -158,6 +158,17 @@ and eval e locEnv gloEnv store : int * store =
     | Assign(acc, e) -> let (loc, store1) = access acc locEnv gloEnv store
                         let (res, store2) = eval e locEnv gloEnv store1
                         (res, setSto store2 loc res) 
+    | PreInc(acc) -> let (loc, store1) = access acc locEnv gloEnv store
+                     let storeVal = getSto store1 loc
+                     let newVal = storeVal + 1
+                     let store2 = setSto store1 loc newVal 
+                     (newVal, store2)
+    | PreDec(acc) -> let (loc, store1) = access acc locEnv gloEnv store
+                     let storeVal = getSto store1 loc
+                     let newVal = storeVal - 1
+                     let store2 = setSto store1 loc newVal 
+                     (newVal, store2)
+
     | CstI i         -> (i, store)
     | Addr acc       -> access acc locEnv gloEnv store
     | Prim1(ope, e1) ->
@@ -237,3 +248,13 @@ let run (Prog topdecs) vs =
 
 (* Example programs are found in the files ex1.c, ex2.c, etc *)
 
+
+ let prog1 = Prog [Fundec(None, "main", [], Block [Dec(TypI, "x"); 
+                Stmt(Expr(Assign(AccVar "x", CstI 5)));
+                    Stmt(Expr(PreInc(AccVar"x")));
+                        Stmt(Expr(Prim1("printi", Access(AccVar "x"))))])];;
+
+ let prog2 = Prog [Fundec(None, "main", [], Block [Dec(TypI, "x"); 
+                Stmt(Expr(Assign(AccVar "x", CstI 5)));
+                    Stmt(Expr(PreDec(AccVar"x")));
+                        Stmt(Expr(Prim1("printi", Access(AccVar "x"))))])];;

@@ -42,8 +42,87 @@ Tested with `CEx/ex74.c`: `++x` on `x = 5` prints `6`.
 
 ## 8.1
 
-<!-- Files: -->
+Files: `MicroC/CEx/ex03.out` `MicroC/CEx/ex05.out` `MicroC/ex03trace.txt`
 
+(i) These steps were done in a previous assignment
+
+(ii) To compile ex3.c and ex5.c we ran the following in CLI, in the MicroC folder. :
+`dotnet fsi -r bin/Debug/net10.0/FsLexYacc.Runtime.dll Absyn.fs CPar.fs CLex.fs Parse.fs Machine.fs Comp.fs ParseAndComp.fs`
+
+In interactive, we compiled ex3.c and ex5.c with: `compileToFile (fromFile "CEx/ex03.c") "CEx/ex03.out";;` and `compileToFile (fromFile "CEx/ex05.c") "CEx/ex05.out";;`.
+
+We get the results:
+ex03.c:`[LDARGS 1; CALL (1, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 1; ADD;
+   CSTI 0; STI; INCSP -1; GOTO "L3"; Label "L2"; GETBP; CSTI 1; ADD; LDI;
+   PRINTI; INCSP -1; GETBP; CSTI 1; ADD; GETBP; CSTI 1; ADD; LDI; CSTI 1; ADD;
+   STI; INCSP -1; INCSP 0; Label "L3"; GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0;
+   ADD; LDI; LT; IFNZRO "L2"; INCSP -1; RET 0]`
+
+ex05.c: `[LDARGS 1; CALL (1, "L1"); STOP; Label "L1"; INCSP 1; GETBP; CSTI 1; ADD;
+   GETBP; CSTI 0; ADD; LDI; STI; INCSP -1; INCSP 1; GETBP; CSTI 0; ADD; LDI;
+   GETBP; CSTI 2; ADD; CALL (2, "L2"); INCSP -1; GETBP; CSTI 2; ADD; LDI;
+   PRINTI; INCSP -1; INCSP -1; GETBP; CSTI 1; ADD; LDI; PRINTI; INCSP -1;
+   INCSP -1; RET 0; Label "L2"; GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD;
+   LDI; GETBP; CSTI 0; ADD; LDI; MUL; STI; INCSP -1; INCSP 0; RET 1]`
+
+rewritten in a more structured way with the symbolic bytecode on the left along with the corresponding MicroC code on the right:
+
+Ex03.c:
+
+| Label | Symbolic bytecode                                                         | micro-C                            |
+|-------|---------------------------------------------------------------------------|------------------------------------|
+|       | `LDARGS 1; CALL (1, L1); STOP`                                            | load arg `n`, call `main(n)`, stop |
+| `L1:` | `INCSP 1`                                                                 | `void main(int n) { int i;`        |
+|       | `GETBP; CSTI 1; ADD; CSTI 0; STI; INCSP -1`                               | `i = 0;`                           |
+|       | `GOTO L3`                                                                 | `while (i < n) {`                  |
+| `L2:` | `GETBP; CSTI 1; ADD; LDI; PRINTI; INCSP -1`                               | `print i;`                         |
+|       | `GETBP; CSTI 1; ADD; GETBP; CSTI 1; ADD; LDI; CSTI 1; ADD; STI; INCSP -1` | `i = i + 1;`                       |
+|       | `INCSP 0`                                                                 | `}`                                |
+| `L3:` | `GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD; LDI; LT; IFNZRO L2`         | `i < n` jump back to `L2` if true  |
+|       | `INCSP -1; RET 0`                                                         | `}` (free i, return from main)     |
+
+
+ex05.c:
+
+| Label | Symbolic bytecode                                                                               | micro-C                                      |
+|-------|-------------------------------------------------------------------------------------------------|----------------------------------------------|
+|       | `LDARGS 1; CALL (1, L1); STOP`                                                                  | load arg `n`, call `main(n)`, stop           |
+| `L1:` | `INCSP 1`                                                                                       | `void main(int n) { int r;`                  |
+|       | `GETBP; CSTI 1; ADD; GETBP; CSTI 0; ADD; LDI; STI; INCSP -1`                                    | `r = n;`                                     |
+|       | `INCSP 1`                                                                                       | `{ int r;`                                   |
+|       | `GETBP; CSTI 0; ADD; LDI; GETBP; CSTI 2; ADD; CALL (2, L2); INCSP -1`                           | `square(n, &r);`                             |
+|       | `GETBP; CSTI 2; ADD; LDI; PRINTI; INCSP -1`                                                     | `print r;`                                   |
+|       | `INCSP -1`                                                                                      | `}`                                          |
+|       | `GETBP; CSTI 1; ADD; LDI; PRINTI; INCSP -1`                                                     | `print r;`                                   |
+|       | `INCSP -1; RET 0`                                                                               | `}`                                          |
+| `L2:` | `GETBP; CSTI 1; ADD; LDI; GETBP; CSTI 0; ADD; LDI; GETBP; CSTI 0; ADD; LDI; MUL; STI; INCSP -1` | `void square(int i, int *rp) { *rp = i * i;` |
+|       | `INCSP 0; RET 1`                                                                                | `}`                                          |
+
+We then executed the compiled programs with `java Machine CEx/ex03.out 10` and `java Machine CEx/ex05.out 10` and got the results:
+
+ex03.out with 10:
+```
+0 1 2 3 4 5 6 7 8 9
+Used 0.009 seconds
+```
+
+ex05.out with 10:
+```
+100 10
+Used 0.007 seconds
+```
+
+To trace the execution, we ran `java Machinetrace CEx/ex03.out 4 > ex03trace.txt`. This file is located at `MicroC/ex03trace.txt`.
+
+| Trace lines | Stack contents | micro-C         | What happens                                                                                     |
+|-------------|----------------|-----------------|--------------------------------------------------------------------------------------------------|
+| 1–2         | `[5 -999 4]`   | call `main(4)`  | LDARGS pushes the argument. CALL builds main's frame (return address, old bp, n) and jumps to L1 |
+| 3–9         | `[5 -999 4 0]` | `int i; i = 0;` | INCSP 1 reserves i; GETBP; CSTI 1; ADD computes its address, STI stores 0.                       |
+| 10          | `[5 -999 4 0]` | `while (i < n)` | GOTO 44 jumps straight to the loop test                                                          |
+| 11–38       | `[5 -999 4 1]` | 1st iteration   | test 0 < 4. print i prints 0 and then i = i + 1.                                                 |
+| 39–122      | `[5 -999 4 4]` | iterations 2–4  | same 28 instructions repeated. prints 1 2 3 4                                                    |
+| 123–132     | `[5 -999 4 4]` | final test      | 4 < 4 is false.                                                                                  |
+| 133–135     | `[4]`          | `}` and return  | INCSP -1 frees i; RET 0 removes the frame and returns to STOP.                                   |
 ## 8.3
 
 Files: `MicroC/Comp.fs`, `MicroC/CEx/ex83.c`, `MicroC/CEx/ex83b.c`

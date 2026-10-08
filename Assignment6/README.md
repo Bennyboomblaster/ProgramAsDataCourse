@@ -71,5 +71,9 @@ The lexer and parser changes from exercise 7.5 (`INC`/`DEC` tokens) are reused h
 - `CEx/ex83b.c`: `++arr[++i]` with `i = 3`, `arr[4] = 5` — prints `i = 4` and `arr[4] = 6`, confirming the address is computed only once and both `i` and the array element are correctly updated.
 
 ## 8.4
+When compiling ex08.out we can see that from entering the loop we run 17 instructions (from the introduction of Label "L2" to the IFNZRO check), whereas prog1 only performs 4 instructions (from instruction 70/GOTO to instruction 72/IFNZERO) in the same loop. ex08 performs roughly 4 times as many instructions per loop as prog1 does, which is also verified in the run time, where ex08 uses 0.266 seconds to run the program compared to prog1's 0.066 seconds.
+<br>
+
+asdasd
 
 <!-- Files: -->

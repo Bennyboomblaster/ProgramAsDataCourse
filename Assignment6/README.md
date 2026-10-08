@@ -74,6 +74,6 @@ The lexer and parser changes from exercise 7.5 (`INC`/`DEC` tokens) are reused h
 When compiling ex08.out we can see that from entering the loop we run 17 instructions (from the introduction of Label "L2" to the IFNZRO check), whereas prog1 only performs 4 instructions (from instruction 70/GOTO to instruction 72/IFNZERO) in the same loop. ex08 performs roughly 4 times as many instructions per loop as prog1 does, which is also verified in the run time, where ex08 uses 0.266 seconds to run the program compared to prog1's 0.066 seconds.
 <br>
 
-asdasd
+When looking the bytecode we can tell that we enter a loop where the value is incremented at each loop. Once inside the loop (GOTO L3) we can see that there are a several conditions/labels (Label 2, 4, 5, 6, etc). Based on the outcome of each condition we GOTO another condition. At the very end we check whether the value is zero with the IFNZERO. If not we jump back up to the start of the loop and run again. If it is zero we can exit the loop.
 
 <!-- Files: -->

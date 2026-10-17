@@ -24,9 +24,9 @@ _TODO: description of the solution and how it was tested._
 
 ## 9.1
 
-Files: _TODO_
+Files: `Virtual/Selsort/Selsort.il`, `Virtual/Selsort/Selsort.jvmbytecode`
 
-_TODO: description of the solution and how it was tested._
+See files and the attached comments.
 
 ## 9.3 (from lecture slides, `QueueWithMistake.java`)
 

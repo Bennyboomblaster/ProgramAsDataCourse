@@ -24,6 +24,7 @@ and expr =
   | Prim2 of string * expr * expr    (* Binary primitive operator   *)
   | Andalso of expr * expr           (* Sequential and              *)
   | Orelse of expr * expr            (* Sequential or               *)
+  | Cond of expr * expr * expr       (* Ex 8.5: e1 ? e2 : e3        *)
   | Call of string * expr list       (* Function call f(...)        *)
                                                                    
 and access =                                                       

@@ -12,9 +12,32 @@
 
 ## 8.5
 
-Files: _TODO_
+Files: `MicroC/Absyn.fs`, `MicroC/CLex.fsl`, `MicroC/CPar.fsy`, `MicroC/Comp.fs`, `MicroC/Interp.fs`, test `MicroC/CEx/ex85.c` (own code marked `Ex 8.5`)
 
-_TODO: description of the solution and how it was tested._
+- **Abstract syntax:** new constructor `Cond of expr * expr * expr` for `e1 ? e2 : e3`.
+- **Lexer:** new tokens `QUES` (`?`) and `COLON` (`:`).
+- **Parser:** rule `Expr QUES Expr COLON Expr`, declared `%right QUES COLON`. It binds weaker than `||` and stronger than `=`, as in C, so `a ? b : c ? d : e` means `a ? b : (c ? d : e)`. It also binds stronger than `print`, so `print a ? b : c` prints the result of the whole conditional.
+- **Compiler:** same scheme as `If`, but `e2`/`e3` are compiled with `cExpr` so the chosen branch leaves its value on the stack:
+
+  ```
+  <e1>  IFZERO Lelse  <e2>  GOTO Lend  Lelse: <e3>  Lend:
+  ```
+
+  Only one of `e2`, `e3` is evaluated.
+- **Interpreter:** `Cond` evaluates `e1` and then only the selected branch.
+
+**Test:** `CEx/ex85.c` tests precedence, nesting, and that only one branch is evaluated (`n > 0 ? ++x : ++y`).
+
+```
+dotnet build microcc.fsproj
+bin/Debug/net10.0/microcc CEx/ex85.c
+./machine CEx/ex85.out 5     # 1 30 100 1 0 10
+./machine CEx/ex85.out 0     # 2 10 200 0 1 0
+./machine CEx/ex85.out -3    # 2 20 200 0 1 3
+./machine CEx/ex85.out -10   # 2 20 100 0 1 10
+```
+
+The interpreter (`Interp.run`) gives the same output. All existing `CEx/ex*.c` programs still compile to the same bytecode as their checked-in `.out` files.
 
 ## 8.6
 

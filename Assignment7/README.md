@@ -12,15 +12,25 @@
 
 ## 8.5
 
-Files: _TODO_
+Files: `Absyn.fs`, `CLex.fsl`, `CPar.fsy`, `Comp.fs`, `Interp.fs`, test program `CEx/ex85.c`
 
-_TODO: description of the solution and how it was tested._
+We added conditional expressions `e1 ? e2 : e3` to micro-C. This required:
 
+- a new expression node in the abstract syntax,
+- two new tokens (`?` and `:`) in the lexer,
+- a grammar rule in the parser, with precedence chosen as in C: lower than `||`, higher than assignment, and right-associative.
+
+. We also extended the interpreter to support the new expression.
 ## 8.6
 
-Files: _TODO_
+Files: `Absyn.fs`, `CLex.fsl`, `CPar.fsy`, `Comp.fs`, `Interp.fs`, test program `CEx/ex86.c`
 
-_TODO: description of the solution and how it was tested._
+We added a `switch` statement to micro-C. Each case consists of an integer constant followed by a block. As the exercise specifies, there is no fall-through, no `break` and no `default` branch. This required:
+
+- a new statement node in the abstract syntax,
+- two new keywords (`switch` and `case`) in the lexer,
+- grammar rules in the parser for the switch statement and its list of cases.
+
 
 ## 9.1
 

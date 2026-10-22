@@ -127,6 +127,12 @@ let rec exec stmt (locEnv : locEnv) (gloEnv : gloEnv) (store : store) : store =
       let (v, store1) = eval e locEnv gloEnv store
       if v<>0 then exec stmt1 locEnv gloEnv store1
               else exec stmt2 locEnv gloEnv store1
+    (* Ex 8.6: run the block of the first case whose constant matches, no fall-through *)
+    | Switch(e, cases) ->
+      let (v, store1) = eval e locEnv gloEnv store
+      match List.tryFind (fun (k, _) -> k = v) cases with
+      | Some (_, body) -> exec body locEnv gloEnv store1
+      | None           -> store1
     | While(e, body) ->
       let rec loop store1 =
               let (v, store2) = eval e locEnv gloEnv store1
@@ -205,6 +211,10 @@ and eval e locEnv gloEnv store : int * store =
     | Orelse(e1, e2) -> 
       let (i1, store1) as res = eval e1 locEnv gloEnv store
       if i1<>0 then res else eval e2 locEnv gloEnv store1
+    (* Ex 8.5: evaluate only the chosen branch *)
+    | Cond(e1, e2, e3) ->
+      let (i1, store1) = eval e1 locEnv gloEnv store
+      if i1<>0 then eval e2 locEnv gloEnv store1 else eval e3 locEnv gloEnv store1
     | Call(f, es) -> callfun f es locEnv gloEnv store 
 
 and access acc locEnv gloEnv store : int * store = 

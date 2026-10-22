@@ -1,0 +1,78 @@
+  public static void SelectionSort(int[]);
+    descriptor: ([I)V
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    
+    locals:
+        0 : arr
+        1 : i
+        2 : least
+        3 : j & tmp                             // they share the same slot because j's scope ends in the inner loop before tmp is declared, so java reuses the slot
+    
+    Code:
+      stack=4, locals=4, args_size=1
+         0: iconst_0                            // push constant 0
+         1: istore_1                            // pops 0 off the stack and stores it in i (int i = 0)
+         2: iload_1                             // reads local variable 1 (i) and pushes its value onto the stack
+         3: aload_0                             // reads local variable 0 (arr) and pushes the reference to the array onto the stack
+         4: arraylength                         // pop arr reference off the stack and push the length of the array as an int
+         5: if_icmpge     57                    // if i >= arr.length jumps to offset 57 (else go into for-loop)
+         8: iload_1                             // reads local variable 1 (i) and pushes its value onto the stack
+         9: istore_2                            // pops i off the stack and stores it in least (int least = i)
+        10: iload_1                             // reads local variable 1 (i) and pushes its value onto the stack
+        11: iconst_1                            // push constant 1
+        12: iadd                                // add i and 1 (we add i+1)
+        13: istore_3                            // pops i+1 off the stack and stores it in j (j = i+1)
+        14: iload_3                             // read local variable 3 (j) and push its value onto the stack
+        15: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        16: arraylength                         // pop arr reference off the stack and push the length of the array as an int
+        17: if_icmpge     37                    // if j >= arr.length jumps to offset 37 (else go into for-loop)
+        20: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        21: iload_3                             // read local variable 3 (j) and push its value onto the stack
+        22: iaload                              // pop arr and j and push arr[j] onto the stack
+        23: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        24: iload_2                             // read local variable 2 (least) and push its value onto the stack
+        25: iaload                              // pop arr and least and push arr[least] onto the stack
+        26: if_icmpge     31                    // if arr[j] >= arr[least] go to offset 31 (else continue)
+        29: iload_3                             // read local variable 3 (j) and push its value onto the stack
+        30: istore_2                            // pop j off the stack and stores it in least (least = j)
+        31: iinc          3, 1                  // increment local variable 3 (j) by constant 1 (j++)
+        34: goto          14                    // go to offset 14 and repeat process, until j >= arr.length
+        37: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        38: iload_1                             // read local variable 1 (i) and push its value onto the stack
+        39: iaload                              // pop arr and i and push arr[i] onto the stack
+        40: istore_3                            // pop the element from the array and store it in tmp (int tmp = arr[i])
+        41: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        42: iload_1                             // read local variable 1 (i) and push its value onto the stack
+        43: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        44: iload_2                             // read local variable 2 (least) and push its value onto the stack
+        45: iaload                              // pop arr and least and push arr[least] onto the stack
+        46: iastore                             // stores arr[i] = arr[least]
+        47: aload_0                             // read local variable 0 (arr) and push the reference to the array onto the stack
+        48: iload_2                             // read local variable 2 (least) and push its value onto the stack
+        49: iload_3                             // read local variable 3 (tmp) and push its value onto the stack
+        50: iastore                             // stores arr[least] = tmp
+        51: iinc          1, 1                  // increment local variable 1 (i) by constant 1 (i++)
+        54: goto          2                     // go to offset 2 and repeat process
+        57: return                              // return from method when outer loop is done
+      LineNumberTable:
+        line 21: 0
+        line 22: 8
+        line 23: 10
+        line 24: 20
+        line 25: 29
+        line 23: 31
+        line 26: 37
+        line 21: 51
+        line 28: 57
+      StackMapTable: number_of_entries = 5
+        frame_type = 252 /* append */
+          offset_delta = 2
+          locals = [ int ]
+        frame_type = 253 /* append */
+          offset_delta = 11
+          locals = [ int, int ]
+        frame_type = 16 /* same */
+        frame_type = 250 /* chop */
+          offset_delta = 5
+        frame_type = 249 /* chop */
+          offset_delta = 19

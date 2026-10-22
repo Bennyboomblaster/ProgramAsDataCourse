@@ -1,7 +1,5 @@
 # Assignment 7
 
-**Due:** _TODO_
-
 **Exercises:** 8.5, 8.6, 9.1, 9.3
 
 **Source folders:** `MicroC/`, `Virtual/`

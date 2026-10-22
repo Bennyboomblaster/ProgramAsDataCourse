@@ -35,6 +35,7 @@ and access =
 and stmt =                                                         
   | If of expr * stmt * stmt         (* Conditional                 *)
   | While of expr * stmt             (* While loop                  *)
+  | Switch of expr * (int * stmt) list (* Ex 8.6: switch (e) { case k: {...} ... } *)
   | Expr of expr                     (* Expression statement   e;   *)
   | Return of expr option            (* Return from method          *)
   | Block of stmtordec list          (* Block: grouping and scope   *)

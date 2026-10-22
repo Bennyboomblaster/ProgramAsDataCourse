@@ -131,6 +131,25 @@ let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) : instr list =
       let labtest  = newLabel()
       [GOTO labtest; Label labbegin] @ cStmt body varEnv funEnv
       @ [Label labtest] @ cExpr e varEnv funEnv @ [IFNZRO labbegin]
+    (* Ex 8.6: the switch value is evaluated once and kept on the stack
+       while the cases are tested. Each case jumps to the next test if its
+       constant does not match; otherwise it runs its block and jumps to
+       the end (no fall-through). The value is popped at the end.
+       The case bodies are compiled with the frame depth increased by one,
+       since the switch value occupies a stack slot below their locals. *)
+    | Switch(e, cases) ->
+      let labend = newLabel()
+      let bodyEnv = (fst varEnv, snd varEnv + 1)
+      let rec cases2code cases =
+          match cases with
+          | [] -> []
+          | (k, body) :: rest ->
+            let labnext = newLabel()
+            [DUP; CSTI k; EQ; IFZERO labnext]
+            @ cStmt body bodyEnv funEnv @ [GOTO labend]
+            @ [Label labnext] @ cases2code rest
+      cExpr e varEnv funEnv @ cases2code cases
+      @ [Label labend; INCSP -1]
     | Expr e -> 
       cExpr e varEnv funEnv @ [INCSP -1]  (* Remove result of expression from stack, as this is a statement *)
     | Block stmts -> 

@@ -41,9 +41,40 @@ The interpreter (`Interp.run`) gives the same output. All existing `CEx/ex*.c` p
 
 ## 8.6
 
-Files: _TODO_
+Files: `MicroC/Absyn.fs`, `MicroC/CLex.fsl`, `MicroC/CPar.fsy`, `MicroC/Comp.fs`, `MicroC/Interp.fs`, test `MicroC/CEx/ex86.c` (own code marked `Ex 8.6`)
 
-_TODO: description of the solution and how it was tested._
+- **Abstract syntax:** new statement `Switch of expr * (int * stmt) list`.
+- **Lexer:** new keywords `switch` and `case`.
+- **Parser:** `SWITCH ( Expr ) { Cases }`, where `Cases` is zero or more `CASE Const : Block`. A case must therefore have an integer constant and a block body. As specified, there is no `break` and no `default`.
+- **Compiler:** the switch expression is evaluated **once** and stays on the stack while the cases are tested. A switch with n cases uses n + 1 labels: one per case test, plus one at the end of the switch. After a body runs, the code jumps to the end, so there is no fall-through.
+
+  ```
+  <e>
+  DUP CSTI k1 EQ IFZERO L1   <body1>  GOTO Lend
+  L1: DUP CSTI k2 EQ IFZERO L2   <body2>  GOTO Lend
+  L2: ...
+  Lend: INCSP -1              // pop the switch value
+  ```
+
+  The case bodies are compiled with the frame depth increased by one, because the switch value occupies a stack slot below them. Locals declared inside a case then get the right offsets, and a `return` inside a case removes the switch value from the stack along with the rest of the frame.
+- **Interpreter:** `Switch` runs the block of the first matching case, or does nothing if no case matches.
+
+**Test:** `CEx/ex86.c` covers:
+- the book's month example (`days`), including a month with no matching case;
+- `return` from inside a case with a local declared in the case block (`classify`);
+- a nested switch;
+- a switch expression with a side effect (`++count + n`), to show it is evaluated only once (`count` ends at 1).
+
+```
+dotnet build microcc.fsproj
+bin/Debug/net10.0/microcc CEx/ex86.c
+./machine CEx/ex86.out 0     # 31 28 29 30 0 / 100 71 -1 / 1 1
+./machine CEx/ex86.out 1     # ... / 21 1   (nested switch)
+./machine CEx/ex86.out 2     # ... / 3 1
+./machine CEx/ex86.out 5     # ... / 1      (no case matches)
+```
+
+All existing `CEx/ex*.c` programs still compile to the same bytecode as their checked-in `.out` files. The handed-out interpreter does not implement `return`, so it was checked with a separate version of the tests that does not use `return`, and it gave the same results as the compiled code.
 
 ## 9.1
 

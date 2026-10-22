@@ -29,6 +29,8 @@ let keyword s =
     | "void"    -> VOID 
     | "while"   -> WHILE
     | "for"     -> FOR    
+    | "switch"  -> SWITCH   // Ex 8.6
+    | "case"    -> CASE     // Ex 8.6
     | _         -> NAME s
  
 let cEscape s = 

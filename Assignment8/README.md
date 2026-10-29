@@ -52,9 +52,17 @@ SETCAR:
 2. Cast the new top into a cons cell address
 3. Write the value of `p[1]` (the head of the cell) to be `v`
 
+
+**(ii)**
+<br>
+**Length:** is defined as `#define Length(hdr) (((hdr)>>2)&0x003FFFFFFFFFFFFF)`. this shifts the header right by 2, removing the colour bits (gg). The tag (tttttttt) is removed with the &0x003FFFFFFFFFFFFF bit, leaving only the 'n' bit, which is the count of the number of words in the block. 
+<br>
+**Color:** is defined as `#define Color(hdr) ((hdr)&3)`. This only keeps the 2 lowest bits (gg). The result is 0-3, which is either White, grey, black or blue)
+<br>
+**Paint:** is defined as `Paint(hdr, color) (((hdr)&(0xFFFFFFFFFFFFFFFC))|(color))`. This clears the colour bits and puts in the new colour. The tag and length stay the same. 
+
 **(iv)**
 The garbage collecter `collect()` is only called in `allocate()`, and it is only called, if the `allocate()` function cannot find any free space on the freelist.
-
 ## 10.2
 
 Files: `MicroVM/microvm.c` `MicroVM/microvm.exe` 
@@ -109,7 +117,27 @@ Number of GC: 1
 ```
 ## 10.3
 
-Files: ``
+Files: `MicroVM/microvm.c` (`sweepPhase`, lines 529-553)
+
+When `sweepPhase` finds a white block of length `n` at `p`, it checks if the block at `p + 1 + n` is also white, and if so joins them into one blue block of length `n + 1 + m` on the freelist.
+
+As in 10.2, `ex35` and `ex36` were run with `HEAPSIZE 1000`.
+
+`ex35`:
+```
+33 33 GC[M,BS]Heap: 168 blocks (831 words); of which 165 free (825 words, largest 5 words); 1 orphans
+44 44 
+Result value: 0 
+Number of GC: 1
+```
+`ex36`:
+```
+1 GC[M,BS]Heap: 168 blocks (831 words); of which 166 free (827 words, largest 5 words); 1 orphans
+1 
+Result value: 0 
+Number of GC: 1
+```
+Output is still correct, and the heap now has 168 blocks instead of 333 (largest free block 5 words instead of 2).
 
 
 

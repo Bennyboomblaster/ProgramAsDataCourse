@@ -534,13 +534,18 @@ void sweepPhase() {
     word hdr = block[0];
     if (Color(hdr) == White)
     {
+      // 10.3: if the next block (at block + 1 + n) is also white (dead),
+      // join the two into one dead block of length n + 1 + m
+      word* next = block + Length(hdr) + 1;
+      if (next < afterHeap && Color(next[0]) == White)
+        hdr = mkheader(0, Length(hdr) + 1 + Length(next[0]), White);
       block[0] = Paint(hdr, Blue);
       if (Length(hdr) > 0)
       {
         block[1] = (word)freelist;
         freelist = block;
       }
-    } else if (Color(hdr) == Black) 
+    } else if (Color(hdr) == Black)
       block[0] = Paint(hdr, White);
     block += Length(hdr) + 1;
   }

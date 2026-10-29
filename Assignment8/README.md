@@ -53,6 +53,7 @@ SETCAR:
 2. Cast the new top into a cons cell address
 3. Write the value of `p[1]` (the head of the cell) to be `v`
 
+
 **(ii)**
 <br>
 **Length:** is defined as `#define Length(hdr) (((hdr)>>2)&0x003FFFFFFFFFFFFF)`. this shifts the header right by 2, removing the colour bits (gg). The tag (tttttttt) is removed with the &0x003FFFFFFFFFFFFF bit, leaving only the 'n' bit, which is the count of the number of words in the block. 
@@ -71,6 +72,8 @@ It is also called on line 759 (HEAPALLOC).
 - The machine tags all integers and never tags pointers, so the GC can tell them apart.
 - The GC only runs inside `allocate`, so the program is paused while it runs.
 
+**(iv)**
+The garbage collecter `collect()` is only called in `allocate()`, and it is only called, if the `allocate()` function cannot find any free space on the freelist.
 ## 10.2
 
 Files: `MicroVM/microvm.c` `MicroVM/microvm.exe` 

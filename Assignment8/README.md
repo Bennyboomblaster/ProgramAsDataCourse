@@ -110,11 +110,9 @@ Number of GC: 1
 
 Files: `MicroVM/microvm.c` (`sweepPhase`, lines 529-553)
 
-When `sweepPhase` finds a white (dead) block of length `n` at address `p`, it looks at the next block, at `p + 1 + n`. If that block is also white, the two are joined into one dead block of length `n + 1 + m`, where `m` is the length of the second block. The joined block is painted blue and put on the freelist. Because `block += Length(hdr) + 1` uses the new length, the sweep then skips past the second block too, so it never gets put on the freelist separately.
-<br>
-We check `next < afterHeap` so we don't read past the end of the heap. We only join with *white* blocks and not blue ones: a blue block may already be on the freelist, and swallowing it would leave a dangling freelist pointer into the middle of the joined block.
+When `sweepPhase` finds a white block of length `n` at `p`, it checks if the block at `p + 1 + n` is also white, and if so joins them into one blue block of length `n + 1 + m` on the freelist.
 
-As in 10.2, `ex35` and `ex36` were run with `HEAPSIZE 1000` (the source still has 20000).
+As in 10.2, `ex35` and `ex36` were run with `HEAPSIZE 1000`.
 
 `ex35`:
 ```
@@ -130,7 +128,7 @@ Number of GC: 1
 Result value: 0 
 Number of GC: 1
 ```
-The output is still correct (`33 33 44 44` and `1 1`). Compared to 10.2, the heap now has 168 blocks instead of 333, and the largest free block is 5 words (2 + 1 + 2, two joined cons cells) instead of 2.
+Output is still correct, and the heap now has 168 blocks instead of 333 (largest free block 5 words instead of 2).
 
 
 

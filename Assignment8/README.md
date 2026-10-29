@@ -108,7 +108,27 @@ Number of GC: 1
 ```
 ## 10.3
 
-Files: ``
+Files: `MicroVM/microvm.c` (`sweepPhase`, lines 529-553)
+
+When `sweepPhase` finds a white block of length `n` at `p`, it checks if the block at `p + 1 + n` is also white, and if so joins them into one blue block of length `n + 1 + m` on the freelist.
+
+As in 10.2, `ex35` and `ex36` were run with `HEAPSIZE 1000`.
+
+`ex35`:
+```
+33 33 GC[M,BS]Heap: 168 blocks (831 words); of which 165 free (825 words, largest 5 words); 1 orphans
+44 44 
+Result value: 0 
+Number of GC: 1
+```
+`ex36`:
+```
+1 GC[M,BS]Heap: 168 blocks (831 words); of which 166 free (827 words, largest 5 words); 1 orphans
+1 
+Result value: 0 
+Number of GC: 1
+```
+Output is still correct, and the heap now has 168 blocks instead of 333 (largest free block 5 words instead of 2).
 
 
 

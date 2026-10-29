@@ -43,7 +43,16 @@ CONS:
 4. Decrement the stack pointer to make the new cell the top of the stack
 
 CAR:
-1.
+1. Read the top of the stack and cast it to an address we can dereference with p[1] `word* p = (word*)s[sp]`
+2. Check if it is a NULL pointer `if (p == 0) ...` -> If p == 0, then the list is empty, so there is no head to return. So instead it returns -1 which ends the execcode.
+3. Write the value of `p[1]` (the head of the cell) into the top slot on the stack `s[sp] = (word)(p[1])` - the value replaces the address at place in the stack, so we do not make any changes to the stack pointer.
+
+SETCAR:
+1. Read the first word and store it in `v` and then decrements the stackpointer
+2. Cast the new top into a cons cell address
+3. Write the value of `p[1]` (the head of the cell) to be `v`
+
+
 
 ## 10.2
 

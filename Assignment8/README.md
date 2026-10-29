@@ -12,6 +12,7 @@
 
 Files: `microvm.c`
 
+**(i)**
 ADD:
 1. Read the two top words on the stack -> (right = `s[sp]` & left = `s[sp-1]`)
 2. UnTag both words to get their true value -> `(Untag(s[sp-1]) + Untag(s[sp])`
@@ -60,6 +61,16 @@ SETCAR:
 **Color:** is defined as `#define Color(hdr) ((hdr)&3)`. This only keeps the 2 lowest bits (gg). The result is 0-3, which is either White, grey, black or blue)
 <br>
 **Paint:** is defined as `Paint(hdr, color) (((hdr)&(0xFFFFFFFFFFFFFFFC))|(color))`. This clears the colour bits and puts in the new colour. The tag and length stay the same. 
+
+**(iii)**
+<br>
+`Allocate` is called when the program needs a new block in the heap. It is called on line 704 (CONS), where the program calls `allocate(CONSTAG, 2, s, p)`, which allocates a cons cell with 2 fields. 
+It is also called on line 759 (HEAPALLOC). 
+<br>
+**Other interactions between the machine and GC:**
+- The machine passes the stack (`s`, `sp`) to `allocate`, so the GC can use it to find the live blocks.
+- The machine tags all integers and never tags pointers, so the GC can tell them apart.
+- The GC only runs inside `allocate`, so the program is paused while it runs.
 
 **(iv)**
 The garbage collecter `collect()` is only called in `allocate()`, and it is only called, if the `allocate()` function cannot find any free space on the freelist.

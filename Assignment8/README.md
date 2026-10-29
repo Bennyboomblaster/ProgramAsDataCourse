@@ -52,7 +52,8 @@ SETCAR:
 2. Cast the new top into a cons cell address
 3. Write the value of `p[1]` (the head of the cell) to be `v`
 
-
+**(iv)**
+The garbage collecter `collect()` is only called in `allocate()`, and it is only called, if the `allocate()` function cannot find any free space on the freelist.
 
 ## 10.2
 

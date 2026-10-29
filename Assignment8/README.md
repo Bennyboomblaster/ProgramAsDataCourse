@@ -52,7 +52,13 @@ SETCAR:
 2. Cast the new top into a cons cell address
 3. Write the value of `p[1]` (the head of the cell) to be `v`
 
-
+**(ii)**
+<br>
+**Length:** is defined as `#define Length(hdr) (((hdr)>>2)&0x003FFFFFFFFFFFFF)`. this shifts the header right by 2, removing the colour bits (gg). The tag (tttttttt) is removed with the &0x003FFFFFFFFFFFFF bit, leaving only the 'n' bit, which is the count of the number of words in the block. 
+<br>
+**Color:** is defined as `#define Color(hdr) ((hdr)&3)`. This only keeps the 2 lowest bits (gg). The result is 0-3, which is either White, grey, black or blue)
+<br>
+**Paint:** is defined as `Paint(hdr, color) (((hdr)&(0xFFFFFFFFFFFFFFFC))|(color))`. This clears the colour bits and puts in the new colour. The tag and length stay the same. 
 
 ## 10.2
 

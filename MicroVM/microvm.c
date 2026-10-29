@@ -504,13 +504,46 @@ void initheap() {
   freelist = &heap[0];
 }
 
+
+// Value is a heap reference if it is not tagged with int and not nil
+#define IsRef(v) (!IsInt(v) && (v) != NILVALUE)
+
+void mark(word* block) {
+  if (Color(block[0])!= White) // already marked/free - stop
+    return;
+  block[0] = Paint(block[0], Black);
+  for (word i = 1; i <= Length(block[0]); i++) 
+    if (IsRef(block[i]))
+      mark((word*)block[i]);
+}
+
+
 void markPhase(word s[], word sp) {
   if (!silent) printf("GC[");
+  for (word i = 0; i <= sp; i++)
+    if (IsRef(s[i]))
+      mark((word*)s[i]);
   if (!silent) printf("M");
 }
 
 void sweepPhase() {
   if (!silent) printf(",");
+  word* block = heap;
+  while (block < afterHeap)
+  {
+    word hdr = block[0];
+    if (Color(hdr) == White)
+    {
+      block[0] = Paint(hdr, Blue);
+      if (Length(hdr) > 0)
+      {
+        block[1] = (word)freelist;
+        freelist = block;
+      }
+    } else if (Color(hdr) == Black) 
+      block[0] = Paint(hdr, White);
+    block += Length(hdr) + 1;
+  }
   if (!silent) printf("BS]");
 }
 

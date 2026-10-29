@@ -37,7 +37,13 @@ IFZERO:
 5. In an outer condition, if `true` then we jump to the address stored in `p[pc]`, and if `false` we continue to the next instruction `pc+1`
 
 CONS:
-1. 
+1. Acquire space on the heap by using `allocate(...)` where we create a word for the header (including tag, length, and color) and two words for the data fields `p[1] & p[2]`
+2. In the newly allocated space `allocate()` automatically allocates the first index to the header and two open slots for two more words, which CONS then writes to the head `p[1] = (word)s[sp-1]` and tail `p[2] = (word)s[sp]`
+3. Write the pointer to the CONS cell into the second slot from the top on the stack `s[sp-1] = (word)p`. The word is untagged, which means it appears on the stack as a pointer, rather than an integer.
+4. Decrement the stack pointer to make the new cell the top of the stack
+
+CAR:
+1.
 
 ## 10.2
 

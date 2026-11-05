@@ -11,9 +11,16 @@ let rec proda xs a =
     | x::xr -> proda xr (x*a)
 
 let rec prodc xs k =
-  match xs with
-    [] -> k 1
-  | x::xr -> prodc xr (fun v -> k(v*x))
+    match xs with
+    | [] -> k 1
+    | 0 :: _ -> 0 
+    | x::xr -> prodc xr (fun v -> k(v*x))
+  
+let rec prodi xs acc= 
+    match xs with 
+    | []    -> acc
+    | 0::_ -> 0
+    | x::xr -> prodi xr (x * acc)
 
 let xs = [3;4;5;23;3;453;4]
 let x = prod xs = prodc xs id

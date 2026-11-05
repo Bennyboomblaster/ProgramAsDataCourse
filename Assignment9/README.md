@@ -48,11 +48,50 @@ Files: ``
 
 ## 11.3
 
-Files: ``
+Files: `Cont/prod.fsx`
+
+This is the CPS version of prod:
+```fsharp
+let rec prodc xs k =
+    match xs with
+    | [] -> k 1
+    | x::xr -> prodc xr (fun v -> k(v*x))
+```
+The base case passes 1 (the product of the empty list) to the continuation. In the recursive case, the work that `prod` leaves waiting on the stack (`x * ...`) is moved into a new continuation `fun v -> k(v*x)`, so the recursive call is a tail call.
+<br>
+When calling `prodc [2; 3; 5] id` we get `val it: int = 30` which is the expected result.
+When calling `prodc [2; 3; 5] (printf "The answer is '%d'\n")` we get `The answer is '30'
+val it: unit = ()`
+<br>
 
 ## 11.4
 
-Files: ``
+Files: `Cont/prod.fsx`
+
+**(i)**
+<br>
+```fsharp
+let rec prodc xs k =
+    match xs with
+    | [] -> k 1
+    | 0 :: _ -> 0
+    | x::xr -> prodc xr (fun v -> k(v*x))
+```
+On a 0 we return 0 without calling `k`, skipping all pending multiplications. This is only correct if `k` just multiplies (so `k 0 = 0`).
+<br>
+`prodc [2; 3; 5] id` gives `30` and `prodc [2; 0; 5] id` gives `0`. The `printf` call from 11.1 no longer type checks, since the zero case forces `k : int -> int`.
+<br>
+
+**(ii)**
+<br>
+```fsharp
+let rec prodi xs acc =
+    match xs with
+    | []    -> acc
+    | 0::_ -> 0
+    | x::xr -> prodi xr (x * acc)
+```
+`prodi [2; 3; 5] 1` gives `30` and `prodi [2; 0; 5] 1` gives `0`.
 
 ## 11.8
 

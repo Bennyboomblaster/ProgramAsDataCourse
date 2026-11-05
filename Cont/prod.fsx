@@ -11,9 +11,16 @@ let rec proda xs a =
     | x::xr -> proda xr (x*a)
 
 let rec prodc xs k =
-  match xs with
-    [] -> k 1
-  | x::xr -> prodc xr (fun v -> k(v*x))
+    match xs with
+    | [] -> k 1
+    | 0 :: _ -> 0 
+    | x::xr -> prodc xr (fun v -> k(v*x))
+  
+let rec prodi xs acc= 
+    match xs with 
+    | []    -> acc
+    | 0::_ -> 0
+    | x::xr -> prodi xr (x * acc)
 
 let xs = [3;4;5;23;3;453;4]
 let x = prod xs = prodc xs id
@@ -37,11 +44,11 @@ prodc [1;2;3] id
 *)
 
 (* To print "The answer is..." *)
-let k = fun r -> printf "The result is %d\n" r
+let k = fun r -> printf "The result is %d\n" r; r
 prodc xs k
 
 let xsN = [-2;3;45]
-let k = fun r -> if r < 0 then printf "WARNING - result %d is negative" r
-                 r
-prodc xs k
-prodc xsN k
+let k2 = fun r -> if r < 0 then printf "WARNING - result %d is negative" r
+                  r
+prodc xs k2
+prodc xsN k2

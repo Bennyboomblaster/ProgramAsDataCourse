@@ -82,4 +82,60 @@ Files: ``
 
 ## 11.8
 
-Files: ``
+Files: `Icon.fs`
+
+**(i)**
+<br>
+To get `3,5,7,9` we can write the following expression: `run (Every(Write(Prim("+", Prim("*", CstI 2, FromTo(1, 4)), CstI 1))));;`
+<br>
+To get `21 22 31 32 41 42` we can write the following expression: 
+```fsharp
+run (Every(Write(Prim("+", Prim("*", CstI 10, FromTo(2, 4)), FromTo(1, 2)))));;
+```
+
+**(ii)**
+<br>
+To get the least multiple of 7 that is greater than 50, we can write the following expression: `run (Write(Prim("<", CstI 50, Prim("*", CstI 7, FromTo(1, 10)))));;` which gives 56. 
+
+**(iii)**
+<br> 
+We have added Prim1 to the `type expr` and then extended the `eval` with the following: 
+```fsharp
+| Prim1(ope, e) -> 
+        eval e (fun v1 -> fun econt1 -> 
+            match (ope, v1) with
+            | ("sqr", Int i) -> 
+                cont (Int(i*i)) econt1
+            | ("even", Int i) -> 
+                if i % 2 = 0 then
+                    cont (Int i) econt1
+                else
+                    econt1 ()
+            | _ -> Str "Unknown prim1. idiot.")
+            econt
+```
+We have tested the two additions with the following: 
+```fsharp
+run (Every(Write(Prim1("sqr", FromTo(1, 4)))));; 
+1 4 9 16 val it: value = Int 0
+
+run (Every(Write(Prim1("even", FromTo(1, 10)))));;
+2 4 6 8 10 val it: value = Int 0
+```
+Which is the expected results, meaning our additions work.
+
+**(iv)**
+<br>
+We extended the `eval` with the following: 
+```fsharp 
+| ("multiples", Int i) -> 
+        let rec loop n = 
+              cont (Int n) (fun () -> loop (n+i))
+        loop i
+```
+We then tested with the following:
+```fsharp
+run (Every(Write(Prim1("multiples", CstI 3))));;
+```
+This runs forever as expected.
+

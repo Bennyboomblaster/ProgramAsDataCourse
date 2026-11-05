@@ -44,7 +44,33 @@ Both leni and lenc are tail recursive functions which pass an extra argument tha
 
 ## 11.2
 
-Files: ``
+Files: `Assignment9/Rev.fsx`
+
+**(i)**
+<br>
+This is the CPS version of rev:
+```fsharp
+let rec revc xs c =
+    match xs with
+    | [] -> c []
+    | x::xr -> revc xr (fun v -> c(v @ [x]))
+```
+When we call `revc [1;2;3] id` we get `val it: [3;2;1]`, which is the expected result.
+<br>
+
+**(ii)**
+<br>
+If we call `revc xs (fun v -> v @ v)` we would append the full list to the full list, so `revc [1;2;3] (fun v -> v @ v)` would give us `val it: [3;2;1;3;2;1]`
+
+**(iii)**
+<br> 
+This is the tail recursive version of rev with an accumulating parameter:
+```fsharp
+let rec revi xs a =
+    match xs with
+    | [] -> a
+    | x::xr -> revi xr (x :: a)
+```
 
 ## 11.3
 

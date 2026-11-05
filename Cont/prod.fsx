@@ -44,11 +44,11 @@ prodc [1;2;3] id
 *)
 
 (* To print "The answer is..." *)
-let k = fun r -> printf "The result is %d\n" r
+let k = fun r -> printf "The result is %d\n" r; r
 prodc xs k
 
 let xsN = [-2;3;45]
-let k = fun r -> if r < 0 then printf "WARNING - result %d is negative" r
-                 r
-prodc xs k
-prodc xsN k
+let k2 = fun r -> if r < 0 then printf "WARNING - result %d is negative" r
+                  r
+prodc xs k2
+prodc xsN k2

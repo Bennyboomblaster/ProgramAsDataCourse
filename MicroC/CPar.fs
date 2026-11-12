@@ -1086,7 +1086,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 140 "CPar.fsy"
-                                                               Andalso(_1, _3)      
+                                                               Cond(_1, _3, CstI 0) 
                    )
 # 140 "CPar.fsy"
                  : 'gentype_ExprNotAccess));
@@ -1098,7 +1098,7 @@ let _fsyacc_reductions = lazy [|
                 (
                    (
 # 141 "CPar.fsy"
-                                                               Orelse(_1, _3)       
+                                                               Cond(_1, CstI 1, _3) 
                    )
 # 141 "CPar.fsy"
                  : 'gentype_ExprNotAccess));

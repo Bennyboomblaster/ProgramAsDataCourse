@@ -90,6 +90,16 @@ let addJump jump c =                    (* jump is GOTO or RET *)
 let addGOTO lab c =
     addJump (GOTO lab) c
 
+let addIFZERO lab3 c =
+    match c with
+    | GOTO lab2 :: Label l :: c1 when l = lab3 -> IFNZRO lab2 :: Label lab3 :: c1 
+    | _ -> IFZERO lab3 :: c
+    
+let addIFNZRO lab3 c =
+    match c with
+    | GOTO lab2 :: Label l :: c1 when l = lab3 -> IFZERO lab2 :: Label lab3 :: c1
+    | _ -> IFNZRO lab3 :: c
+
 let rec addCST i c =
     match (i, c) with
     | (0, ADD        :: c1) -> c1
@@ -194,12 +204,12 @@ let rec cStmt stmt (varEnv : varEnv) (funEnv : funEnv) (c : instr list) : instr 
     | If(e, stmt1, stmt2) -> 
       let (jumpend, c1) = makeJump c
       let (labelse, c2) = addLabel (cStmt stmt2 varEnv funEnv c1)
-      cExpr e varEnv funEnv (IFZERO labelse 
-       :: cStmt stmt1 varEnv funEnv (addJump jumpend c2))
+      cExpr e varEnv funEnv 
+        (addIFZERO labelse (cStmt stmt1 varEnv funEnv (addJump jumpend c2)))
     | While(e, body) ->
       let labbegin = newLabel()
       let (jumptest, c1) = 
-           makeJump (cExpr e varEnv funEnv (IFNZRO labbegin :: c))
+           makeJump (cExpr e varEnv funEnv (addIFNZRO labbegin c))
       addJump jumptest (Label labbegin :: cStmt body varEnv funEnv c1)
     | Expr e -> 
       cExpr e varEnv funEnv (addINCSP -1 c) (* Remove result of expression from stack, as this is a statement *)
@@ -278,33 +288,30 @@ and cExpr (e : expr) (varEnv : varEnv) (funEnv : funEnv) (c : instr list) : inst
     | Andalso(e1, e2) ->
       match c with
       | IFZERO lab :: _ ->
-         cExpr e1 varEnv funEnv (IFZERO lab :: cExpr e2 varEnv funEnv c)
+         cExpr e1 varEnv funEnv (addIFZERO lab (cExpr e2 varEnv funEnv c))
       | IFNZRO labthen :: c1 -> 
         let (labelse, c2) = addLabel c1
         cExpr e1 varEnv funEnv
-           (IFZERO labelse 
-              :: cExpr e2 varEnv funEnv (IFNZRO labthen :: c2))
+           (addIFZERO labelse (cExpr e2 varEnv funEnv (addIFNZRO labthen c2)))
       | _ ->
         let (jumpend,  c1) = makeJump c
         let (labfalse, c2) = addLabel (addCST 0 c1)
         cExpr e1 varEnv funEnv
-          (IFZERO labfalse 
-             :: cExpr e2 varEnv funEnv (addJump jumpend c2))
+          (addIFZERO labfalse (cExpr e2 varEnv funEnv (addJump jumpend c2)))
     | Orelse(e1, e2) -> 
       match c with
       | IFNZRO lab :: _ -> 
-        cExpr e1 varEnv funEnv (IFNZRO lab :: cExpr e2 varEnv funEnv c)
+        cExpr e1 varEnv funEnv (addIFNZRO lab (cExpr e2 varEnv funEnv c))
       | IFZERO labthen :: c1 ->
         let(labelse, c2) = addLabel c1
         cExpr e1 varEnv funEnv
-           (IFNZRO labelse :: cExpr e2 varEnv funEnv
-             (IFZERO labthen :: c2))
+           (addIFNZRO labelse (cExpr e2 varEnv funEnv
+             (addIFZERO labthen c2)))
       | _ ->
         let (jumpend, c1) = makeJump c
         let (labtrue, c2) = addLabel(addCST 1 c1)
         cExpr e1 varEnv funEnv
-           (IFNZRO labtrue 
-             :: cExpr e2 varEnv funEnv (addJump jumpend c2))
+           (addIFNZRO labtrue (cExpr e2 varEnv funEnv (addJump jumpend c2)))
     | Call(f, es) -> callfun f es varEnv funEnv c
 
 (* Generate code to access variable, dereference pointer or index array: *)

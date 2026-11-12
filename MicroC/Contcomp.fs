@@ -99,6 +99,9 @@ let rec addCST i c =
     | (1, MUL        :: c1) -> c1
     | (1, DIV        :: c1) -> c1
     | (0, EQ         :: c1) -> addNOT c1
+    | (i, CSTI j :: LT          :: c1) -> addCST (if i < j then 1 else 0) c1  (* i <  j *)
+    | (i, CSTI j :: SWAP :: LT  :: c1) -> addCST (if j < i then 1 else 0) c1  (* i >  j *)
+    | (i, CSTI j :: EQ          :: c1) -> addCST (if i = j then 1 else 0) c1  (* i == j *)
     | (_, INCSP m    :: c1) -> if m < 0 then addINCSP (m+1) c1
                                else CSTI i :: c
     | (0, IFZERO lab :: c1) -> addGOTO lab c1

@@ -8,7 +8,30 @@
 
 ## 12.1
 
-Files: 
+Files: `MicroC/Contcomp.fs`
+<br>
+
+We added the functions `addIFZERO` and `addIFNZRO` and replaced them anywhere in our code 
+where we used `IFZERO labelse ::` or `IFNZRO ...` to ensure that unnecessary machine code is not generated.
+These make sure that we invert the test and switch the label they go to along with removing
+the `GOTO` instruction, if we encounter a structure that looks like `IFZERO L3; GOTO L2; Label L3`. 
+Because our compiler works backwards, when we cons a conditional jump, the part we jump over
+already exists, so we can inspect it. If the pattern doesn't match anything, they just return
+the original cons.
+<br>
+
+These are the added functions:
+```fsharp
+let addIFZERO lab3 c =
+    match c with
+    | GOTO lab2 :: Label l :: c1 when l = lab3 -> IFNZRO lab2 :: Label lab3 :: c1 
+    | _ -> IFZERO lab3 :: c
+    
+let addIFNZRO lab3 c =
+    match c with
+    | GOTO lab2 :: Label l :: c1 when l = lab3 -> IFZERO lab2 :: Label lab3 :: c1
+    | _ -> IFNZRO lab3 :: c
+```
 
 ## 12.2
 
